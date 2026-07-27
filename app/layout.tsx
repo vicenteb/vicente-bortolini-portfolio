@@ -1,0 +1,43 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://vicentebortolini.com"),
+  title: "Vicente Bortolini — UX/UI & Product Designer",
+  description:
+    "Portfólio de Vicente Bortolini, UX/UI e Product Designer especializado em produtos digitais, experiências omnichannel, varejo e inteligência artificial.",
+  keywords: [
+    "Vicente Bortolini",
+    "UX Designer",
+    "UI Designer",
+    "Product Designer",
+    "Design de Produto",
+    "Portfólio UX",
+  ],
+  openGraph: {
+    title: "Vicente Bortolini — UX/UI & Product Designer",
+    description:
+      "Estratégia, pesquisa e design para produtos digitais que conectam pessoas, tecnologia e resultados de negócio.",
+    locale: "pt_BR",
+    type: "website",
+  },
+  other: {
+    "codex-preview": "development",
+  },
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="pt-BR">
+      <body>{children}</body>
+    </html>
+  );
+}
