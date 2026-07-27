@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import InteractiveStarfield from "./InteractiveStarfield";
 
 const BehanceIcon = () => (
   <svg
@@ -25,8 +27,36 @@ const LinkedInIcon = () => (
 );
 
 export default function HomeExperience() {
+  const [isContactOpen, setIsContactOpen] = useState(false);
+  const contactTriggerRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isContactOpen) {
+      return;
+    }
+
+    const contactTrigger = contactTriggerRef.current;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsContactOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    closeButtonRef.current?.focus();
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      contactTrigger?.focus();
+    };
+  }, [isContactOpen]);
+
   return (
     <main className="home-screen" id="inicio">
+      <InteractiveStarfield />
+
       <a className="skip-link" href="#conteudo">
         Ir para o conteúdo
       </a>
@@ -67,24 +97,68 @@ export default function HomeExperience() {
         <Link className="edge-link edge-link-right" href="/sobre">
           <span>Sobre</span>
         </Link>
-        <Link className="edge-link edge-link-bottom" href="/contatos">
+        <button
+          ref={contactTriggerRef}
+          className="edge-link edge-link-bottom contact-trigger"
+          type="button"
+          aria-haspopup="dialog"
+          aria-expanded={isContactOpen}
+          aria-controls="contact-drawer"
+          onClick={() => setIsContactOpen(true)}
+        >
           <span>Contatos</span>
-        </Link>
+        </button>
       </nav>
 
       <section className="home-hero" id="conteudo" aria-labelledby="home-title">
-        <div className="static-art" aria-hidden="true">
-          <span className="art-block art-block-one" />
-          <span className="art-block art-block-two" />
-          <span className="art-block art-block-three" />
-          <span className="art-block art-block-four" />
-        </div>
-
         <h1 id="home-title">
           Olá, sou <strong className="role-emphasis">Product Designer</strong>
           <span className="hero-line">com foco em UI/UX design</span>
         </h1>
       </section>
+
+      <div
+        className={`contact-overlay${isContactOpen ? " is-open" : ""}`}
+        aria-hidden={!isContactOpen}
+        onMouseDown={(event) => {
+          if (event.target === event.currentTarget) {
+            setIsContactOpen(false);
+          }
+        }}
+      >
+        <section
+          className="contact-drawer"
+          id="contact-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="contact-title"
+        >
+          <h2 className="contact-title" id="contact-title">
+            Contatos
+          </h2>
+
+          <button
+            ref={closeButtonRef}
+            className="contact-close"
+            type="button"
+            aria-label="Fechar contatos"
+            onClick={() => setIsContactOpen(false)}
+          >
+            <span aria-hidden="true" />
+          </button>
+
+          <div className="contact-details">
+            <p>
+              <span className="contact-label">WhatsApp:</span>{" "}
+              <span className="contact-value">51982306185</span>
+            </p>
+            <p>
+              <span className="contact-label">E-mail:</span>{" "}
+              <span className="contact-value">vicenteb@gmail.com</span>
+            </p>
+          </div>
+        </section>
+      </div>
     </main>
   );
 }

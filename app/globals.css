@@ -1,6 +1,22 @@
 @import "tailwindcss";
 
 @font-face {
+  font-family: "Roboto";
+  src: url("/fonts/roboto-latin-100-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/roboto-latin-300-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Montserrat";
   src: url("/fonts/montserrat-latin-400-normal.woff2") format("woff2");
   font-style: normal;
@@ -105,6 +121,15 @@ a {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitchTiles'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
   content: "";
   opacity: 0.09;
+  pointer-events: none;
+}
+
+.interactive-starfield {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 
@@ -226,66 +251,9 @@ a {
   padding: 8rem 11rem;
 }
 
-.static-art {
-  position: absolute;
-  z-index: -1;
-  top: 50%;
-  left: 50%;
-  width: clamp(15rem, 30vw, 32rem);
-  aspect-ratio: 1;
-  transform: translate(-50%, -51%) rotate(-8deg);
-  filter: drop-shadow(0 3rem 4rem rgba(0, 0, 0, 0.5));
-  opacity: 0.72;
-}
-
-.static-art::before {
-  position: absolute;
-  top: 4%;
-  left: 5%;
-  width: 90%;
-  height: 90%;
-  border: 1px solid rgba(244, 242, 237, 0.08);
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 25%, #343744 0%, #11131a 44%, #08090d 76%);
-  box-shadow:
-    inset -2rem -2.5rem 4rem rgba(0, 0, 0, 0.62),
-    inset 1rem 1.5rem 2.7rem rgba(255, 255, 255, 0.035);
-  content: "";
-}
-
-.art-block {
-  position: absolute;
-  display: block;
-  width: 24%;
-  aspect-ratio: 1;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: linear-gradient(145deg, rgba(69, 72, 85, 0.56), rgba(12, 14, 20, 0.9));
-  box-shadow:
-    inset 0.5rem 0.5rem 1.2rem rgba(255, 255, 255, 0.025),
-    1.4rem 1.8rem 2.8rem rgba(0, 0, 0, 0.34);
-}
-
-.art-block-one {
-  top: 18%;
-  left: 19%;
-}
-
-.art-block-two {
-  top: 11%;
-  right: 18%;
-}
-
-.art-block-three {
-  right: 13%;
-  bottom: 17%;
-}
-
-.art-block-four {
-  bottom: 12%;
-  left: 22%;
-}
-
 .home-hero h1 {
+  position: relative;
+  z-index: 1;
   max-width: 58rem;
   margin: 0;
   font-family: var(--font-title);
@@ -336,10 +304,154 @@ a {
   transform: translateX(-50%);
 }
 
-a:focus-visible {
+.contact-trigger {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+a:focus-visible,
+button:focus-visible {
   border-radius: 2px;
   outline: 2px solid var(--foreground);
   outline-offset: 0.4rem;
+}
+
+.contact-overlay {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(2, 3, 6, 0);
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    background 420ms ease,
+    visibility 0s linear 560ms;
+}
+
+.contact-overlay.is-open {
+  background: rgba(2, 3, 6, 0.3);
+  pointer-events: auto;
+  visibility: visible;
+  transition:
+    background 420ms ease,
+    visibility 0s linear;
+}
+
+.contact-drawer {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: clamp(9.5rem, 18vh, 11.5rem);
+  place-items: center;
+  padding: 3.8rem clamp(1.5rem, 5vw, 5rem) 2rem;
+  border-top: 1px solid rgba(244, 242, 237, 0.12);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(88, 70, 202, 0.14), transparent 42%),
+    #0b0d13;
+  box-shadow: 0 -1.5rem 4rem rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  transform: translateY(105%);
+  transition:
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 360ms ease;
+}
+
+.contact-overlay.is-open .contact-drawer {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contact-title {
+  position: absolute;
+  top: 1.35rem;
+  left: 50%;
+  margin: 0;
+  color: #e7e5e1;
+  font-family: var(--font-title);
+  font-size: 0.69rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: normal;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+.contact-close {
+  position: absolute;
+  top: 1.35rem;
+  right: clamp(1.5rem, 3.6vw, 4.25rem);
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #e7e5e1;
+  cursor: pointer;
+  place-items: center;
+  opacity: 0.72;
+  transition:
+    opacity 180ms ease,
+    transform 260ms ease;
+}
+
+.contact-close::before,
+.contact-close::after {
+  position: absolute;
+  width: 1.05rem;
+  height: 1px;
+  background: currentColor;
+  content: "";
+}
+
+.contact-close::before {
+  transform: rotate(45deg);
+}
+
+.contact-close::after {
+  transform: rotate(-45deg);
+}
+
+.contact-close:hover,
+.contact-close:focus-visible {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+.contact-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3rem, 8vw, 7rem);
+  color: #e7e5e1;
+  font-family: "Roboto", sans-serif;
+  font-size: clamp(0.86rem, 1.05vw, 0.98rem);
+  letter-spacing: 0.025em;
+  line-height: 1.35;
+  text-align: center;
+  user-select: text;
+  white-space: nowrap;
+}
+
+.contact-details p {
+  margin: 0;
+  cursor: text;
+}
+
+.contact-label {
+  font-weight: 100;
+}
+
+.contact-value {
+  font-weight: 300;
+}
+
+.contact-details ::selection {
+  background: rgba(88, 70, 202, 0.75);
+  color: #ffffff;
 }
 
 @media (max-width: 760px) {
@@ -379,11 +491,6 @@ a:focus-visible {
     line-height: 1.12;
   }
 
-  .static-art {
-    width: min(72vw, 25rem);
-    opacity: 0.62;
-  }
-
   .edge-link-left {
     left: 0.75rem;
   }
@@ -394,6 +501,26 @@ a:focus-visible {
 
   .edge-link-bottom {
     bottom: 1.35rem;
+  }
+
+  .contact-drawer {
+    min-height: 10rem;
+    padding: 3.7rem 1rem 1.85rem;
+  }
+
+  .contact-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.17em;
+  }
+
+  .contact-close {
+    right: 1.1rem;
+  }
+
+  .contact-details {
+    gap: clamp(1.25rem, 5vw, 2rem);
+    font-size: clamp(0.7rem, 3.3vw, 0.8rem);
+    letter-spacing: 0;
   }
 }
 
@@ -421,6 +548,11 @@ a:focus-visible {
   *::before,
   *::after {
     scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .contact-overlay,
+  .contact-drawer {
     transition-duration: 0.01ms !important;
   }
 }
