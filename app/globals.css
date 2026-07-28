@@ -450,12 +450,10 @@ a {
   bottom: clamp(5.5rem, 9vh, 7rem);
   display: flex;
   width: min(40vw, 48rem);
+  padding-left: 30px;
   flex-direction: column;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(88, 70, 202, 0.12), transparent 42%),
-    var(--surface);
-  box-shadow: 0 -1.5rem 4rem rgba(0, 0, 0, 0.22);
+  overflow: visible;
+  background: var(--background);
   opacity: 0;
   transform: translate3d(0, 105%, 0);
   transition:
@@ -473,6 +471,9 @@ a {
 
 .awards-header {
   position: relative;
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
   flex: 0 0 auto;
   padding: 0 3.9rem 1.3rem 0;
   border-bottom: 1px solid rgba(244, 242, 237, 0.09);
@@ -490,7 +491,7 @@ a {
 
 .awards-close {
   top: 0;
-  right: 0;
+  right: -0.55rem;
 }
 
 .awards-list {
