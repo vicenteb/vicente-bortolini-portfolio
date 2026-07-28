@@ -351,19 +351,23 @@ a {
     linear-gradient(
       90deg,
       var(--background) 0%,
-      rgba(5, 6, 10, 0.72) 8%,
-      transparent 23%,
-      transparent 65%,
-      rgba(5, 6, 10, 0.7) 84%,
+      rgba(5, 6, 10, 0.8) 9%,
+      rgba(5, 6, 10, 0.32) 20%,
+      transparent 30%,
+      transparent 59%,
+      rgba(5, 6, 10, 0.3) 76%,
+      rgba(5, 6, 10, 0.78) 90%,
       var(--background) 100%
     ),
     linear-gradient(
       180deg,
       var(--background) 0%,
-      rgba(5, 6, 10, 0.68) 8%,
-      transparent 22%,
-      transparent 66%,
-      rgba(5, 6, 10, 0.72) 86%,
+      rgba(5, 6, 10, 0.76) 9%,
+      rgba(5, 6, 10, 0.28) 19%,
+      transparent 28%,
+      transparent 61%,
+      rgba(5, 6, 10, 0.32) 77%,
+      rgba(5, 6, 10, 0.8) 91%,
       var(--background) 100%
     );
   content: "";
@@ -377,13 +381,13 @@ a {
     linear-gradient(90deg, rgba(5, 6, 10, 0.58), transparent 39%),
     linear-gradient(
       145deg,
-      rgba(88, 70, 202, 0.2),
-      rgba(88, 70, 202, 0.08) 56%,
-      rgba(88, 70, 202, 0.14)
+      rgba(88, 70, 202, 0.28),
+      rgba(88, 70, 202, 0.12) 56%,
+      rgba(88, 70, 202, 0.2)
     );
   content: "";
   mix-blend-mode: color;
-  opacity: 0.66;
+  opacity: 0.78;
 }
 
 .about-copy {
