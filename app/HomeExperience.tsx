@@ -94,11 +94,11 @@ export default function HomeExperience({
     };
 
     document.addEventListener("keydown", onKeyDown);
-    awardsCloseButtonRef.current?.focus();
+    awardsCloseButtonRef.current?.focus({ preventScroll: true });
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      awardsTrigger?.focus();
+      awardsTrigger?.focus({ preventScroll: true });
     };
   }, [isAwardsOpen]);
 
@@ -275,6 +275,11 @@ export default function HomeExperience({
         <div
           className={`awards-overlay${isAwardsOpen ? " is-open" : ""}`}
           aria-hidden={!isAwardsOpen}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setIsAwardsOpen(false);
+            }
+          }}
         >
           <section
             className="awards-drawer"
