@@ -42,7 +42,7 @@ const awards = [
   { date: "Dez de 2015", title: "Prêmio RBS de Jornalismo e Entretenimento - APPs Colorado ZH e Gremista ZH - Narração Torcedora - categoria Novo Formato", issuer: "Grupo RBS", association: "Grupo RBS" },
   { date: "Out de 2015", title: "Prêmio Digital Mídia - América Latina 2015 - Colorado ZH e Gremista ZH, com site, mobile site e aplicativos - categoria Melhor Novo Produto", issuer: "WAN-IFRA", association: "Grupo RBS" },
   { date: "Dez de 2011", title: "Prêmio RBS de Jornalismo e Entretenimento - Site RuralBR - categoria Inovação", issuer: "Grupo RBS", association: "Grupo RBS" },
-  { date: "Nov de 2004", title: "Prêmio Detran-RS Publicidade pela Vida - 6ª Edição", issuer: "PUCRS", association: "PUCRS" },
+  { date: "Nov de 2004", title: "Prêmio Detran-RS Publicidade pela Vida - 6ª Edição", issuer: "PUCRS", association: "PUCRS", associationLabel: "Associado a" },
 ];
 
 export default function HomeExperience({
@@ -310,10 +310,20 @@ export default function HomeExperience({
                   <h3>{award.title}</h3>
                   <p>Emitido por {award.issuer}</p>
                   <p>
-                    Associado ao <strong>{award.association}</strong>
+                    {award.associationLabel ?? "Associado ao"}{" "}
+                    <strong>{award.association}</strong>
                   </p>
                 </article>
               ))}
+              <a
+                className="awards-link awards-details-link"
+                href="https://www.linkedin.com/in/vicentebortolini/details/honors/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Ver mais detalhes das premiações no LinkedIn — abre em uma nova aba"
+              >
+                Ver mais detalhes
+              </a>
             </div>
           </section>
         </div>
