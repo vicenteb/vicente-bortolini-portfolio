@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import InteractiveStarfield from "./InteractiveStarfield";
+import InteractiveStarfield from "@/components/ui/interactive-starfield";
 
 const BehanceIcon = () => (
   <svg
@@ -26,10 +28,24 @@ const LinkedInIcon = () => (
   </svg>
 );
 
-export default function HomeExperience() {
+type HomeExperienceProps = {
+  initialView?: "home" | "about";
+};
+
+export default function HomeExperience({
+  initialView = "home",
+}: HomeExperienceProps) {
+  const router = useRouter();
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isLeavingAbout, setIsLeavingAbout] = useState(false);
   const contactTriggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const isAbout = initialView === "about";
+
+  useEffect(() => {
+    router.prefetch("/");
+    router.prefetch("/sobre");
+  }, [router]);
 
   useEffect(() => {
     if (!isContactOpen) {
@@ -54,18 +70,49 @@ export default function HomeExperience() {
   }, [isContactOpen]);
 
   return (
-    <main className="home-screen" id="inicio">
-      <InteractiveStarfield />
-
+    <main
+      className={`home-screen${isAbout ? " about-screen" : ""}${
+        isLeavingAbout ? " is-leaving-about" : ""
+      }`}
+      id="inicio"
+    >
       <a className="skip-link" href="#conteudo">
         Ir para o conteúdo
       </a>
+
+      {!isAbout && (
+        <InteractiveStarfield
+          particleCount={360}
+          interactionRadius={155}
+          particleColor="#5846CA"
+          activeColor="#DDD8FF"
+          speed={0.52}
+        />
+      )}
 
       <header className="home-header">
         <Link
           className="full-name"
           href="/"
           aria-label="Vicente Bortolini — início"
+          onClick={(event) => {
+            if (!isAbout || isLeavingAbout) {
+              return;
+            }
+
+            event.preventDefault();
+
+            const prefersReducedMotion = window.matchMedia(
+              "(prefers-reduced-motion: reduce)",
+            ).matches;
+
+            if (prefersReducedMotion) {
+              router.push("/");
+              return;
+            }
+
+            setIsLeavingAbout(true);
+          }}
         >
           Vicente Bortolini
         </Link>
@@ -94,7 +141,12 @@ export default function HomeExperience() {
         <Link className="edge-link edge-link-left" href="/trabalhos">
           <span>Trabalhos</span>
         </Link>
-        <Link className="edge-link edge-link-right" href="/sobre">
+        <Link
+          className={`edge-link edge-link-right${isAbout ? " is-active" : ""}`}
+          href="/sobre"
+          aria-current={isAbout ? "page" : undefined}
+          onClick={() => setIsLeavingAbout(false)}
+        >
           <span>Sobre</span>
         </Link>
         <button
@@ -110,12 +162,72 @@ export default function HomeExperience() {
         </button>
       </nav>
 
-      <section className="home-hero" id="conteudo" aria-labelledby="home-title">
-        <h1 id="home-title">
-          Olá, sou <strong className="role-emphasis">Product Designer</strong>
-          <span className="hero-line">com foco em UI/UX design</span>
-        </h1>
-      </section>
+      {isAbout ? (
+        <section
+          className="about-content"
+          id="conteudo"
+          aria-labelledby="about-title"
+          onAnimationEnd={(event) => {
+            if (
+              isLeavingAbout &&
+              event.animationName === "about-slide-out"
+            ) {
+              router.push("/");
+            }
+          }}
+        >
+          <div className="about-photo" aria-hidden="true">
+            <Image
+              src="/vicente-bortolini-perfil.jpeg"
+              alt=""
+              fill
+              priority
+              unoptimized
+              sizes="(max-width: 760px) 100vw, 50vw"
+            />
+          </div>
+
+          <div className="about-copy">
+            <h1 className="sr-only" id="about-title">
+              Sobre Vicente Bortolini
+            </h1>
+            <p>
+              Sou especialista em Product Design, UX Strategy e transformação
+              digital, com sólida experiência na criação de produtos digitais
+              escaláveis para web, mobile, tablets e ecossistemas omnichannel.
+              Atuo conectando negócio, tecnologia e experiência do usuário para
+              desenvolver soluções digitais com impacto real em operação,
+              vendas, eficiência e experiência do cliente.
+            </p>
+            <p>
+              Ao longo da minha trajetória, participei da concepção e evolução
+              de plataformas de jornalismo e mídia digital, e-commerce,
+              aplicativos, sistemas de PDV (POS), self-checkout, produtos
+              omnichannel, dashboards e soluções digitais internas para
+              operação e logística do varejo e instituições financeiras.
+            </p>
+            <p className="about-expertise-title">Tenho atuação forte em:</p>
+            <p className="about-expertise">
+              Product Design | UX/UI Design | Product Strategy | Design Systems
+              | Discovery &amp; Delivery | Omnichannel Experience | Jornada do
+              Usuário | Transformação Digital | Inteligência Artificial
+              aplicada ao Design | Prototipação | Arquitetura de Informação |
+              Design Ops | Agile / Scrum | Figma | Experiência em varejo e
+              e-commerce | Fintech &amp; Financial
+            </p>
+            <a className="awards-link" href="#premiacoes" id="premiacoes">
+              Premiações / Reconhecimentos
+            </a>
+          </div>
+        </section>
+      ) : (
+        <section className="home-hero" id="conteudo" aria-labelledby="home-title">
+          <h1 id="home-title">
+            Olá, sou <strong className="role-emphasis">Product Designer</strong>
+            <span className="hero-line">com foco em UX/UI design</span>
+          </h1>
+        </section>
+      )}
 
       <div
         className={`contact-overlay${isContactOpen ? " is-open" : ""}`}
