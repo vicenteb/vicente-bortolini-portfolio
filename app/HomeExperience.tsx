@@ -32,14 +32,30 @@ type HomeExperienceProps = {
   initialView?: "home" | "about";
 };
 
+const awards = [
+  { date: "Ago de 2022", title: "Prêmio As 100+ Inovadoras no Uso de TI", issuer: "IT Mídia em parceria com a FIAP", association: "Grupo PanVel" },
+  { date: "Nov de 2021", title: "Prêmio ABRAPPE 2021 - Melhor case de inovação", issuer: "ABRAPPE", association: "Grupo PanVel" },
+  { date: "Out de 2020", title: "GROW+ Innovation Awards - categoria Inovação Aberta", issuer: "GROW+ Innovation Awards", association: "Grupo PanVel" },
+  { date: "Mai de 2019", title: "Loja Referência no Varejo Experience", issuer: "Sindilojas Porto Alegre", association: "Grupo PanVel" },
+  { date: "Nov de 2018", title: "Empresa Inovadora em TIC de SUCESU-RS", issuer: "SUCESU-RS", association: "Grupo PanVel" },
+  { date: "Out de 2018", title: "Prêmio As 100+ Inovadoras no Uso de TI - Grupo PanVel", issuer: "IT Mídia em parceria com a PwC", association: "Grupo PanVel" },
+  { date: "Dez de 2015", title: "Prêmio RBS de Jornalismo e Entretenimento - APPs Colorado ZH e Gremista ZH - Narração Torcedora - categoria Novo Formato", issuer: "Grupo RBS", association: "Grupo RBS" },
+  { date: "Out de 2015", title: "Prêmio Digital Mídia - América Latina 2015 - Colorado ZH e Gremista ZH, com site, mobile site e aplicativos - categoria Melhor Novo Produto", issuer: "WAN-IFRA", association: "Grupo RBS" },
+  { date: "Dez de 2011", title: "Prêmio RBS de Jornalismo e Entretenimento - Site RuralBR - categoria Inovação", issuer: "Grupo RBS", association: "Grupo RBS" },
+  { date: "Nov de 2004", title: "Prêmio Detran-RS Publicidade pela Vida - 6ª Edição", issuer: "PUCRS", association: "PUCRS" },
+];
+
 export default function HomeExperience({
   initialView = "home",
 }: HomeExperienceProps) {
   const router = useRouter();
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isAwardsOpen, setIsAwardsOpen] = useState(false);
   const [isLeavingAbout, setIsLeavingAbout] = useState(false);
   const contactTriggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const awardsTriggerRef = useRef<HTMLButtonElement>(null);
+  const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
   const isAbout = initialView === "about";
 
   useEffect(() => {
@@ -68,6 +84,23 @@ export default function HomeExperience({
       contactTrigger?.focus();
     };
   }, [isContactOpen]);
+
+  useEffect(() => {
+    if (!isAwardsOpen) return;
+
+    const awardsTrigger = awardsTriggerRef.current;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsAwardsOpen(false);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    awardsCloseButtonRef.current?.focus();
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      awardsTrigger?.focus();
+    };
+  }, [isAwardsOpen]);
 
   return (
     <main
@@ -215,9 +248,18 @@ export default function HomeExperience({
               Design Ops | Agile / Scrum | Figma | Experiência em varejo e
               e-commerce | Fintech &amp; Financial
             </p>
-            <a className="awards-link" href="#premiacoes" id="premiacoes">
+            <button
+              ref={awardsTriggerRef}
+              className="awards-link"
+              id="premiacoes"
+              type="button"
+              aria-haspopup="dialog"
+              aria-expanded={isAwardsOpen}
+              aria-controls="awards-drawer"
+              onClick={() => setIsAwardsOpen(true)}
+            >
               Premiações / Reconhecimentos
-            </a>
+            </button>
           </div>
         </section>
       ) : (
@@ -227,6 +269,49 @@ export default function HomeExperience({
             <span className="hero-line">com foco em UX/UI design</span>
           </h1>
         </section>
+      )}
+
+      {isAbout && (
+        <div
+          className={`awards-overlay${isAwardsOpen ? " is-open" : ""}`}
+          aria-hidden={!isAwardsOpen}
+        >
+          <section
+            className="awards-drawer"
+            id="awards-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="awards-title"
+          >
+            <header className="awards-header">
+              <h2 className="awards-title" id="awards-title">
+                Premiações / Reconhecimentos
+              </h2>
+              <button
+                ref={awardsCloseButtonRef}
+                className="contact-close awards-close"
+                type="button"
+                aria-label="Fechar premiações e reconhecimentos"
+                onClick={() => setIsAwardsOpen(false)}
+              >
+                <span aria-hidden="true" />
+              </button>
+            </header>
+
+            <div className="awards-list">
+              {awards.map((award) => (
+                <article className="award-item" key={`${award.date}-${award.title}`}>
+                  <time>{award.date}</time>
+                  <h3>{award.title}</h3>
+                  <p>Emitido por {award.issuer}</p>
+                  <p>
+                    Associado ao <strong>{award.association}</strong>
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
       )}
 
       <div
