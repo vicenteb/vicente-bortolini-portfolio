@@ -106,7 +106,7 @@ export default function HomeExperience({
     <main
       className={`home-screen${isAbout ? " about-screen" : ""}${
         isLeavingAbout ? " is-leaving-about" : ""
-      }`}
+      }${isAwardsOpen ? " is-awards-open" : ""}`}
       id="inicio"
     >
       <a className="skip-link" href="#conteudo">

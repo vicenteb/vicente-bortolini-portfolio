@@ -377,6 +377,18 @@ a {
   font-size: clamp(0.92rem, 1.03vw, 1.08rem);
   font-weight: 300;
   line-height: 1.58;
+  transition:
+    opacity 180ms ease 500ms,
+    visibility 0s linear 680ms;
+}
+
+.about-screen.is-awards-open .about-copy {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity 120ms ease,
+    visibility 0s linear 120ms;
 }
 
 .about-copy p {
@@ -453,7 +465,7 @@ a {
   padding-left: 30px;
   flex-direction: column;
   overflow: visible;
-  background: var(--background);
+  background: transparent;
   opacity: 0;
   transform: translate3d(0, 105%, 0);
   transition:
@@ -489,7 +501,7 @@ a {
   line-height: 2rem;
 }
 
-.awards-close {
+.contact-close.awards-close {
   top: 0;
   right: -0.55rem;
 }
