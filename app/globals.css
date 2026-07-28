@@ -21,7 +21,7 @@
   src: url("/fonts/montserrat-latin-400-normal.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
@@ -29,7 +29,7 @@
   src: url("/fonts/montserrat-latin-500-normal.woff2") format("woff2");
   font-style: normal;
   font-weight: 500;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
@@ -37,7 +37,7 @@
   src: url("/fonts/montserrat-latin-600-normal.woff2") format("woff2");
   font-style: normal;
   font-weight: 600;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
@@ -165,7 +165,7 @@ a {
 
 .full-name {
   font-size: 0.86rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .full-name,
@@ -341,6 +341,7 @@ a {
   object-fit: cover;
   object-position: 50% 0%;
   filter: grayscale(1) contrast(1.08) brightness(1.04);
+  opacity: 0.95;
 }
 
 .about-photo::before {
@@ -348,8 +349,32 @@ a {
   z-index: 1;
   inset: 0;
   background:
-    linear-gradient(90deg, var(--background) 0%, transparent 15%, transparent 68%, var(--background) 100%),
-    linear-gradient(180deg, var(--background) 0%, transparent 17%, transparent 72%, var(--background) 100%);
+    linear-gradient(
+      90deg,
+      var(--background) 0%,
+      rgba(5, 6, 10, 0.8) 9%,
+      rgba(5, 6, 10, 0.44) 21%,
+      rgba(5, 6, 10, 0.16) 31%,
+      transparent 39%,
+      transparent 50%,
+      rgba(5, 6, 10, 0.16) 60%,
+      rgba(5, 6, 10, 0.42) 76%,
+      rgba(5, 6, 10, 0.78) 90%,
+      var(--background) 100%
+    ),
+    linear-gradient(
+      180deg,
+      var(--background) 0%,
+      rgba(5, 6, 10, 0.76) 9%,
+      rgba(5, 6, 10, 0.42) 20%,
+      rgba(5, 6, 10, 0.15) 29%,
+      transparent 37%,
+      transparent 52%,
+      rgba(5, 6, 10, 0.16) 63%,
+      rgba(5, 6, 10, 0.44) 78%,
+      rgba(5, 6, 10, 0.8) 91%,
+      var(--background) 100%
+    );
   content: "";
 }
 
@@ -361,13 +386,12 @@ a {
     linear-gradient(90deg, rgba(5, 6, 10, 0.58), transparent 39%),
     linear-gradient(
       145deg,
-      rgba(88, 70, 202, 0.2),
-      rgba(88, 70, 202, 0.08) 56%,
-      rgba(88, 70, 202, 0.14)
+      rgba(5, 6, 10, 0.48),
+      rgba(5, 6, 10, 0.14) 56%,
+      rgba(5, 6, 10, 0.34)
     );
   content: "";
-  mix-blend-mode: color;
-  opacity: 0.66;
+  opacity: 1;
 }
 
 .about-copy {
@@ -377,6 +401,18 @@ a {
   font-size: clamp(0.92rem, 1.03vw, 1.08rem);
   font-weight: 300;
   line-height: 1.58;
+  transition:
+    opacity 180ms ease 500ms,
+    visibility 0s linear 680ms;
+}
+
+.about-screen.is-awards-open .about-copy {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity 120ms ease,
+    visibility 0s linear 120ms;
 }
 
 .about-copy p {
@@ -399,11 +435,14 @@ a {
   position: relative;
   display: inline-block;
   padding: 0 0 0.48rem;
+  border: 0;
+  background: transparent;
   color: #e7e5e1;
   font-family: "Roboto", sans-serif;
   font-size: 0.86rem;
   font-weight: 300;
   letter-spacing: 0.055em;
+  cursor: pointer;
 }
 
 .awards-link::after {
@@ -411,7 +450,7 @@ a {
   right: 0;
   bottom: 0;
   left: 0;
-  height: 1px;
+  height: 2px;
   background: var(--link-accent);
   content: "";
   transform: scaleX(0.28);
@@ -422,6 +461,145 @@ a {
 .awards-link:hover::after,
 .awards-link:focus-visible::after {
   transform: scaleX(1);
+}
+
+.awards-overlay {
+  position: fixed;
+  z-index: 24;
+  inset: 0;
+  padding: clamp(7.4rem, 13vh, 9.5rem) clamp(7.5rem, 10vw, 12rem)
+    clamp(5.5rem, 9vh, 7rem);
+  display: grid;
+  grid-template-columns: minmax(21rem, 0.92fr) minmax(30rem, 1.08fr);
+  align-items: center;
+  gap: clamp(3.5rem, 7vw, 8rem);
+  overflow: visible;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear 680ms;
+}
+
+.awards-overlay.is-open {
+  pointer-events: auto;
+  visibility: visible;
+  transition: visibility 0s linear;
+}
+
+.awards-drawer {
+  position: relative;
+  display: flex;
+  grid-column: 2;
+  width: 100%;
+  height: min(67vh, 46rem);
+  min-height: 30rem;
+  flex-direction: column;
+  overflow: visible;
+  background: transparent;
+  opacity: 0;
+  transform: translate3d(0, calc(100% + 6rem), 0);
+  transition:
+    transform 680ms cubic-bezier(0.64, 0, 0.78, 0),
+    opacity 360ms ease;
+}
+
+.awards-overlay.is-open .awards-drawer {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 780ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 360ms ease;
+}
+
+.awards-header {
+  position: relative;
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0 3.9rem 1.3rem 0;
+  border-bottom: 1px solid rgba(244, 242, 237, 0.09);
+}
+
+.awards-title {
+  margin: 0;
+  color: #e7e5e1;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.86rem;
+  font-weight: 300;
+  letter-spacing: 0.055em;
+  line-height: 2rem;
+}
+
+.contact-close.awards-close {
+  top: 0;
+  right: -0.55rem;
+}
+
+.awards-list {
+  min-height: 0;
+  padding-right: clamp(0.8rem, 1.3vw, 1.3rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-color: rgba(231, 229, 225, 0.32) transparent;
+  scrollbar-width: thin;
+}
+
+.awards-list::-webkit-scrollbar {
+  width: 3px;
+}
+
+.awards-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.awards-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(231, 229, 225, 0.28);
+}
+
+.award-item {
+  padding: clamp(1.2rem, 2.3vh, 1.8rem) 0;
+  border-bottom: 1px solid rgba(244, 242, 237, 0.075);
+  color: rgba(244, 242, 237, 0.67);
+  font-family: "Roboto", sans-serif;
+  font-size: clamp(0.78rem, 0.86vw, 0.9rem);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.award-item:last-child {
+  border-bottom: 0;
+}
+
+.award-item time {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: rgba(244, 242, 237, 0.43);
+  font-size: 0.82em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.award-item h3 {
+  margin: 0 0 0.55rem;
+  color: rgba(244, 242, 237, 0.94);
+  font-size: 1.02em;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+}
+
+.award-item p {
+  margin: 0.12rem 0 0;
+}
+
+.award-item strong {
+  color: rgba(244, 242, 237, 0.88);
+  font-weight: 400;
+}
+
+.awards-details-link {
+  margin: 1.5rem 0 1.8rem;
 }
 
 @keyframes about-slide-in {
@@ -710,6 +888,31 @@ button:focus-visible {
     line-height: 1.72;
   }
 
+  .awards-drawer {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .awards-overlay {
+    padding: 6.4rem 3.55rem 5.8rem;
+    display: block;
+  }
+
+  .awards-header {
+    padding-right: 3rem;
+  }
+
+  .awards-title {
+    font-size: 0.8rem;
+  }
+
+  .award-item {
+    font-size: 0.79rem;
+  }
+
   .edge-link-left {
     left: 0.75rem;
   }
@@ -752,6 +955,12 @@ button:focus-visible {
 
   .about-copy {
     font-size: 0.88rem;
+  }
+
+  .awards-overlay {
+    padding-right: 7rem;
+    grid-template-columns: minmax(18rem, 0.8fr) minmax(25rem, 1.2fr);
+    gap: 3rem;
   }
 }
 
@@ -806,6 +1015,8 @@ button:focus-visible {
 
   .contact-overlay,
   .contact-drawer,
+  .awards-overlay,
+  .awards-drawer,
   .about-content {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
