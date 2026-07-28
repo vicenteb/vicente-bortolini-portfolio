@@ -440,10 +440,15 @@ a {
 }
 
 .awards-overlay {
-  position: fixed;
+  position: absolute;
   z-index: 24;
-  inset: 0;
-  overflow: hidden;
+  inset: clamp(7.4rem, 13vh, 9.5rem) clamp(7.5rem, 10vw, 12rem)
+    clamp(5.5rem, 9vh, 7rem);
+  display: grid;
+  grid-template-columns: minmax(21rem, 0.92fr) minmax(30rem, 1.08fr);
+  align-items: center;
+  gap: clamp(3.5rem, 7vw, 8rem);
+  overflow: visible;
   pointer-events: none;
   visibility: hidden;
   transition: visibility 0s linear 680ms;
@@ -456,18 +461,17 @@ a {
 }
 
 .awards-drawer {
-  position: absolute;
-  top: clamp(7.4rem, 13vh, 9.5rem);
-  right: clamp(7.5rem, 10vw, 12rem);
-  bottom: clamp(5.5rem, 9vh, 7rem);
+  position: relative;
   display: flex;
-  width: min(40vw, 48rem);
-  padding-left: 30px;
+  grid-column: 2;
+  width: 100%;
+  height: min(67vh, 46rem);
+  min-height: 30rem;
   flex-direction: column;
   overflow: visible;
   background: transparent;
   opacity: 0;
-  transform: translate3d(0, 105%, 0);
+  transform: translate3d(0, calc(100% + 6rem), 0);
   transition:
     transform 680ms cubic-bezier(0.64, 0, 0.78, 0),
     opacity 360ms ease;
@@ -856,11 +860,16 @@ button:focus-visible {
   }
 
   .awards-drawer {
-    top: 6.4rem;
-    right: 3.55rem;
-    bottom: 5.8rem;
-    left: 3.55rem;
+    position: absolute;
+    inset: 0;
     width: auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  .awards-overlay {
+    inset: 6.4rem 3.55rem 5.8rem;
+    display: block;
   }
 
   .awards-header {
@@ -919,9 +928,10 @@ button:focus-visible {
     font-size: 0.88rem;
   }
 
-  .awards-drawer {
+  .awards-overlay {
     right: 7rem;
-    width: min(52vw, 42rem);
+    grid-template-columns: minmax(18rem, 0.8fr) minmax(25rem, 1.2fr);
+    gap: 3rem;
   }
 }
 
