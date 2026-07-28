@@ -341,6 +341,7 @@ a {
   object-fit: cover;
   object-position: 50% 0%;
   filter: grayscale(1) contrast(1.08) brightness(1.04);
+  opacity: 0.95;
 }
 
 .about-photo::before {
@@ -353,10 +354,10 @@ a {
       var(--background) 0%,
       rgba(5, 6, 10, 0.8) 9%,
       rgba(5, 6, 10, 0.44) 21%,
-      rgba(5, 6, 10, 0.16) 29%,
-      transparent 35%,
-      transparent 54%,
-      rgba(5, 6, 10, 0.16) 63%,
+      rgba(5, 6, 10, 0.16) 31%,
+      transparent 39%,
+      transparent 50%,
+      rgba(5, 6, 10, 0.16) 60%,
       rgba(5, 6, 10, 0.42) 76%,
       rgba(5, 6, 10, 0.78) 90%,
       var(--background) 100%
@@ -366,10 +367,10 @@ a {
       var(--background) 0%,
       rgba(5, 6, 10, 0.76) 9%,
       rgba(5, 6, 10, 0.42) 20%,
-      rgba(5, 6, 10, 0.15) 27%,
-      transparent 33%,
-      transparent 56%,
-      rgba(5, 6, 10, 0.16) 66%,
+      rgba(5, 6, 10, 0.15) 29%,
+      transparent 37%,
+      transparent 52%,
+      rgba(5, 6, 10, 0.16) 63%,
       rgba(5, 6, 10, 0.44) 78%,
       rgba(5, 6, 10, 0.8) 91%,
       var(--background) 100%
