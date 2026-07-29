@@ -29,7 +29,7 @@ const LinkedInIcon = () => (
 );
 
 type HomeExperienceProps = {
-  initialView?: "home" | "about" | "works";
+  initialView?: "home" | "about" | "works" | "rennerProject";
 };
 
 const selectedWorks = [
@@ -75,11 +75,13 @@ export default function HomeExperience({
   const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
+  const isProject = initialView === "rennerProject";
 
   useEffect(() => {
     router.prefetch("/");
     router.prefetch("/sobre");
     router.prefetch("/trabalhos");
+    router.prefetch("/trabalhos/lojas-renner-app-reposicao");
   }, [router]);
 
   useEffect(() => {
@@ -141,7 +143,7 @@ export default function HomeExperience({
     <main
       className={`home-screen${isAbout ? " about-screen" : ""}${
         isWorks ? " works-screen" : ""
-      }${
+      }${isProject ? " project-screen" : ""}${
         isLeavingAbout ? " is-leaving-about" : ""
       }${isLeavingWorks ? " is-leaving-works" : ""}${
         isAwardsOpen ? " is-awards-open" : ""
@@ -152,7 +154,7 @@ export default function HomeExperience({
         Ir para o conteúdo
       </a>
 
-      {!isAbout && !isWorks && (
+      {!isAbout && !isWorks && !isProject && (
         <InteractiveStarfield
           particleCount={360}
           interactionRadius={155}
@@ -168,7 +170,12 @@ export default function HomeExperience({
           href="/"
           aria-label="Vicente Bortolini — início"
           onClick={(event) => {
-            if ((!isAbout && !isWorks) || isLeavingAbout || isLeavingWorks) {
+            if (
+              isProject ||
+              (!isAbout && !isWorks && !isProject) ||
+              isLeavingAbout ||
+              isLeavingWorks
+            ) {
               return;
             }
 
@@ -215,9 +222,11 @@ export default function HomeExperience({
 
       <nav className="edge-navigation" aria-label="Navegação principal">
         <Link
-          className={`edge-link edge-link-left${isWorks ? " is-active" : ""}`}
+          className={`edge-link edge-link-left${
+            isWorks || isProject ? " is-active" : ""
+          }`}
           href="/trabalhos"
-          aria-current={isWorks ? "page" : undefined}
+          aria-current={isWorks || isProject ? "page" : undefined}
           onClick={() => setIsLeavingWorks(false)}
         >
           <span>Trabalhos</span>
@@ -344,11 +353,22 @@ export default function HomeExperience({
                   >
                     {work.title}
                   </button>
-                  {selectedWork === index && (
-                    <button className="awards-link work-project-link" type="button">
-                      Visualizar projeto
-                    </button>
-                  )}
+                  {selectedWork === index &&
+                    (index === 0 ? (
+                      <Link
+                        className="awards-link work-project-link"
+                        href="/trabalhos/lojas-renner-app-reposicao"
+                      >
+                        Visualizar projeto
+                      </Link>
+                    ) : (
+                      <button
+                        className="awards-link work-project-link"
+                        type="button"
+                      >
+                        Visualizar projeto
+                      </button>
+                    ))}
                 </div>
               ))}
             </div>
@@ -378,6 +398,29 @@ export default function HomeExperience({
               quality={72}
               sizes="50vw"
             />
+          </div>
+        </section>
+      ) : isProject ? (
+        <section
+          className="project-content"
+          id="conteudo"
+          aria-labelledby="project-title"
+        >
+          <header className="project-intro">
+            <h1 id="project-title">Lojas Renner — App Reposição</h1>
+            <p className="project-subtitle">Subtítulo do projeto</p>
+            <p className="project-year">Ano do projeto</p>
+            <p className="project-description">
+              Pequeno texto descritivo sobre o contexto, o desafio e a
+              participação no projeto.
+            </p>
+          </header>
+
+          <div className="project-gallery" aria-label="Imagens do projeto">
+            <div className="project-placeholder project-placeholder-wide" />
+            <div className="project-placeholder project-placeholder-tall" />
+            <div className="project-placeholder project-placeholder-wide" />
+            <div className="project-placeholder project-placeholder-square" />
           </div>
         </section>
       ) : (
