@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import InteractiveStarfield from "@/components/ui/interactive-starfield";
+import SkeletonImage from "@/components/ui/skeleton-image";
 
 const BehanceIcon = () => (
   <svg
@@ -285,16 +285,16 @@ export default function HomeExperience({
             }
           }}
         >
-          <div className="about-photo" aria-hidden="true">
-            <Image
-              src="/vicente-bortolini-perfil.jpeg"
-              alt=""
-              fill
-              priority
-              unoptimized
-              sizes="(max-width: 760px) 100vw, 50vw"
-            />
-          </div>
+          <SkeletonImage
+            containerClassName="about-photo"
+            src="/vicente-bortolini-perfil.jpeg"
+            alt=""
+            fill
+            priority
+            unoptimized
+            sizes="(max-width: 760px) 100vw, 50vw"
+            decorative
+          />
 
           <div className="about-copy">
             <h1 className="sr-only" id="about-title">
@@ -402,22 +402,18 @@ export default function HomeExperience({
             </a>
           </div>
 
-          <div
-            className="works-preview has-cover"
-            aria-label={`Imagem do projeto ${selectedWorks[selectedWork].title}`}
-            role="img"
-          >
-            <Image
-              key={selectedWorks[selectedWork].image}
-              className="works-preview-image"
-              src={selectedWorks[selectedWork].image}
-              alt=""
-              fill
-              priority={selectedWork === 0}
-              quality={72}
-              sizes="50vw"
-            />
-          </div>
+          <SkeletonImage
+            key={selectedWorks[selectedWork].image}
+            containerClassName="works-preview has-cover"
+            containerAriaLabel={`Imagem do projeto ${selectedWorks[selectedWork].title}`}
+            imageClassName="works-preview-image"
+            src={selectedWorks[selectedWork].image}
+            alt=""
+            fill
+            priority={selectedWork === 0}
+            quality={72}
+            sizes="50vw"
+          />
         </section>
       ) : isProject ? (
         <section
@@ -449,8 +445,12 @@ export default function HomeExperience({
 
           <div className="project-gallery" aria-label="Imagens do projeto">
             {rennerProjectImages.map((image, index) => (
-              <Image
-                className="project-gallery-image"
+              <SkeletonImage
+                containerClassName="project-gallery-item"
+                containerStyle={{
+                  aspectRatio: `${image.width} / ${image.height}`,
+                }}
+                imageClassName="project-gallery-image"
                 key={image.src}
                 src={image.src}
                 alt={`Lojas Renner App Reposição — imagem ${index + 1} de ${rennerProjectImages.length}`}
