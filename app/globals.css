@@ -193,24 +193,19 @@ a {
   transition: transform 320ms cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.full-name:hover::after,
 .full-name:focus-visible::after,
-.edge-link:hover::after,
 .edge-link:focus-visible::after,
 .edge-link.is-active::after {
   transform: scaleX(1);
   transform-origin: left;
 }
 
-.full-name:hover,
 .full-name:focus-visible,
-.edge-link:hover,
 .edge-link:focus-visible {
   color: #ffffff;
   opacity: 1;
 }
 
-.full-name:hover,
 .full-name:focus-visible {
   transform: translateY(-2px);
 }
@@ -220,7 +215,6 @@ a {
   transition: transform 180ms ease;
 }
 
-.edge-link:hover > span,
 .edge-link:focus-visible > span {
   transform: translateY(-2px);
 }
@@ -242,7 +236,6 @@ a {
     transform 180ms ease;
 }
 
-.social-links a:hover,
 .social-links a:focus-visible {
   opacity: 1;
   transform: translateY(-2px);
@@ -458,7 +451,6 @@ a {
   transition: transform 320ms cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.awards-link:hover::after,
 .awards-link:focus-visible::after {
   transform: scaleX(1);
 }
@@ -483,6 +475,11 @@ a {
   pointer-events: auto;
   visibility: visible;
   transition: visibility 0s linear;
+}
+
+.about-screen.is-awards-open .home-header,
+.about-screen.is-awards-open .edge-link {
+  z-index: 25;
 }
 
 .awards-drawer {
@@ -770,7 +767,6 @@ button:focus-visible {
   transform: rotate(-45deg);
 }
 
-.contact-close:hover,
 .contact-close:focus-visible {
   opacity: 1;
   transform: rotate(90deg);
@@ -807,6 +803,44 @@ button:focus-visible {
 .contact-details ::selection {
   background: rgba(88, 70, 202, 0.75);
   color: #ffffff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .full-name:hover::after,
+  .edge-link:hover::after,
+  .awards-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .full-name:hover,
+  .edge-link:hover {
+    color: #ffffff;
+    opacity: 1;
+  }
+
+  .full-name:hover,
+  .edge-link:hover > span,
+  .social-links a:hover {
+    transform: translateY(-2px);
+  }
+
+  .social-links a:hover {
+    opacity: 1;
+  }
+
+  .contact-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+  }
+}
+
+@media (hover: none) {
+  .contact-close:focus,
+  .contact-close:focus-visible {
+    border-radius: 0;
+    outline: 0;
+  }
 }
 
 @media (max-width: 760px) {
@@ -857,13 +891,31 @@ button:focus-visible {
     position: fixed;
   }
 
+  .about-screen .home-header {
+    min-height: calc(5.15rem + env(safe-area-inset-top));
+    padding-top: calc(1.35rem + env(safe-area-inset-top));
+    padding-bottom: 1.15rem;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5, 6, 10, 0.98) 0%,
+        rgba(5, 6, 10, 0.92) 68%,
+        rgba(5, 6, 10, 0.72) 86%,
+        transparent 100%
+      );
+    border-bottom: 1px solid rgba(244, 242, 237, 0.035);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
   .about-content {
     position: relative;
     inset: auto;
     grid-template-columns: 1fr;
     gap: 1.1rem;
     min-height: 100svh;
-    padding: 6.4rem 3.55rem 5.8rem;
+    padding: calc(6.8rem + env(safe-area-inset-top)) 3.55rem
+      calc(7.2rem + env(safe-area-inset-bottom));
   }
 
   .about-photo {
@@ -873,6 +925,8 @@ button:focus-visible {
 
   .about-photo img {
     object-position: 50% 0%;
+    transform: scale(0.97);
+    transform-origin: 50% 0;
   }
 
   .about-copy {
@@ -894,11 +948,13 @@ button:focus-visible {
     width: 100%;
     height: 100%;
     min-height: 0;
+    background: var(--background);
   }
 
   .awards-overlay {
     padding: 6.4rem 3.55rem 5.8rem;
     display: block;
+    background: transparent;
   }
 
   .awards-header {
@@ -922,12 +978,45 @@ button:focus-visible {
   }
 
   .edge-link-bottom {
-    bottom: 1.35rem;
+    z-index: 20;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-height: calc(5.25rem + env(safe-area-inset-bottom));
+    justify-content: center;
+    padding: 1.8rem 1.35rem
+      calc(1.25rem + env(safe-area-inset-bottom));
+    background:
+      linear-gradient(
+        0deg,
+        rgba(5, 6, 10, 0.99) 0%,
+        rgba(5, 6, 10, 0.94) 62%,
+        rgba(5, 6, 10, 0.7) 82%,
+        transparent 100%
+      );
+    border-top: 1px solid rgba(244, 242, 237, 0.035);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transform: none;
+  }
+
+  .about-screen .contact-trigger::after {
+    right: auto;
+    left: 50%;
+    width: 5.6rem;
+    transform: translateX(-50%) scaleX(0);
+  }
+
+  .about-screen .contact-trigger:focus-visible::after {
+    transform: translateX(-50%) scaleX(1);
   }
 
   .contact-drawer {
     min-height: 10rem;
     padding: 3.7rem 1rem 1.85rem;
+    border-top: 0;
+    background: #0b0d13;
+    box-shadow: none;
   }
 
   .contact-title {
@@ -961,6 +1050,71 @@ button:focus-visible {
     padding-right: 7rem;
     grid-template-columns: minmax(18rem, 0.8fr) minmax(25rem, 1.2fr);
     gap: 3rem;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1366px) and (pointer: coarse) {
+  .about-screen {
+    min-height: 100svh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .about-content {
+    position: relative;
+    inset: auto;
+    grid-template-columns: minmax(18rem, 0.9fr) minmax(24rem, 1.1fr);
+    align-items: start;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    min-height: 100svh;
+    padding: clamp(7.4rem, 13vh, 9.5rem)
+      clamp(5.5rem, 7.5vw, 7.5rem) clamp(5.5rem, 9vh, 7rem);
+  }
+
+  .about-photo {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .about-photo img {
+    object-position: 50% 0%;
+    transform: scale(0.97);
+    transform-origin: 50% 0;
+  }
+
+  .about-copy {
+    align-self: start;
+  }
+
+  .about-screen .awards-overlay {
+    grid-template-columns: minmax(0, 1fr);
+    padding: clamp(7.4rem, 13vh, 9.5rem)
+      clamp(5.5rem, 7.5vw, 7.5rem) clamp(5.5rem, 9vh, 7rem);
+    background: transparent;
+    gap: 0;
+  }
+
+  .about-screen .awards-drawer {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: calc(
+      100svh - clamp(7.4rem, 13vh, 9.5rem) - clamp(5.5rem, 9vh, 7rem)
+    );
+    min-height: 30rem;
+    background: var(--background);
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1024px) and (pointer: coarse) and (orientation: portrait) {
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-photo {
+    width: min(100%, 42rem);
   }
 }
 
