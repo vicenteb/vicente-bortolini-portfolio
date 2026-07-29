@@ -35,7 +35,8 @@ type HomeExperienceProps = {
     | "works"
     | "rennerProject"
     | "sicrediProject"
-    | "panvelPdvMovelProject";
+    | "panvelPdvMovelProject"
+    | "panvelSelfCheckoutProject";
 };
 
 const selectedWorks = [
@@ -57,7 +58,7 @@ const selectedWorks = [
   {
     title: "PanVel - Self-checkout",
     image: "/panvel-self-checkout.jpg",
-    projectHref: null,
+    projectHref: "/trabalhos/panvel-self-checkout",
   },
   {
     title: "PanVel - App omniPedidos",
@@ -120,6 +121,15 @@ const panvelPdvMovelProjectImages = [
   { src: "/panvel-pdv-movel-case-10.jpg", width: 1054, height: 1493 },
 ];
 
+const panvelSelfCheckoutProjectImages = Array.from(
+  { length: 23 },
+  (_, index) => ({
+    src: `/panvel-self-checkout-case-${String(index + 1).padStart(2, "0")}.jpg`,
+    width: 1055,
+    height: 1491,
+  }),
+);
+
 const projectDetails = {
   rennerProject: {
     title: "Lojas Renner - App Reposição",
@@ -148,6 +158,15 @@ const projectDetails = {
       "Participei da criação do PDV Móvel do Grupo PanVel, uma solução desenvolvida para otimizar a experiência de compra nas lojas físicas e aumentar a eficiência operacional em horários de pico. O projeto permitiu que colaboradores realizassem vendas diretamente no salão da loja utilizando dispositivos móveis capazes de escanear códigos de barras, consultar produtos e processar pagamentos de forma rápida e integrada. A iniciativa teve como foco reduzir filas, agilizar o atendimento e oferecer uma experiência de compra mais fluida e conveniente para os clientes, fortalecendo a estratégia omnichannel e a transformação digital do varejo farmacêutico. Minha atuação envolveu UX/UI, definição de fluxos operacionais, testes com usuários, validação da solução em pilotos com filiais selecionadas e evolução contínua da experiência do produto.",
     images: panvelPdvMovelProjectImages,
     imageAlt: "PanVel PDV móvel",
+  },
+  panvelSelfCheckoutProject: {
+    title: "PanVel - Self-checkout",
+    subtitle: "Uma experiência de compra mais rápida, autônoma e assistida",
+    year: "2024 a 2025",
+    description:
+      "Participei da criação do projeto piloto de Self-checkout do Grupo PanVel, uma iniciativa de inovação voltada à transformação da experiência de compra nas lojas físicas. A solução permite que clientes realizem todo o processo de autoatendimento de forma simples e ágil, desde o escaneamento dos produtos até o pagamento diretamente no terminal, utilizando cartão de crédito, débito ou Pix. O projeto foi concebido para otimizar jornadas de compras rápidas, aumentar a autonomia do cliente e reduzir atritos e tempo de espera no processo de pagamento, fortalecendo a estratégia omnichannel e a modernização da experiência no varejo farmacêutico. A atuação envolveu experiência do usuário, fluxos de autoatendimento e integração entre operação física.",
+    images: panvelSelfCheckoutProjectImages,
+    imageAlt: "PanVel Self-checkout",
   },
 };
 
@@ -183,12 +202,15 @@ export default function HomeExperience({
   const isProject =
     initialView === "rennerProject" ||
     initialView === "sicrediProject" ||
-    initialView === "panvelPdvMovelProject";
+    initialView === "panvelPdvMovelProject" ||
+    initialView === "panvelSelfCheckoutProject";
   const activeProject =
     initialView === "sicrediProject"
       ? projectDetails.sicrediProject
       : initialView === "panvelPdvMovelProject"
         ? projectDetails.panvelPdvMovelProject
+        : initialView === "panvelSelfCheckoutProject"
+          ? projectDetails.panvelSelfCheckoutProject
         : projectDetails.rennerProject;
 
   useEffect(() => {
@@ -198,6 +220,7 @@ export default function HomeExperience({
     router.prefetch("/trabalhos/lojas-renner-app-reposicao");
     router.prefetch("/trabalhos/sicredi-portabilidade-multifundos");
     router.prefetch("/trabalhos/panvel-pdv-movel");
+    router.prefetch("/trabalhos/panvel-self-checkout");
   }, [router]);
 
   useEffect(() => {
