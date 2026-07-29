@@ -29,8 +29,23 @@ const LinkedInIcon = () => (
 );
 
 type HomeExperienceProps = {
-  initialView?: "home" | "about";
+  initialView?: "home" | "about" | "works";
 };
+
+const selectedWorks = [
+  {
+    title: "Lojas Renner - App Reposição",
+    image: "/lojas-renner-app-reposicao.jpg",
+  },
+  {
+    title: "Sicredi Previdência - Portabilidade Multifundos",
+    image: "/sicredi-portabilidade-multifundos.jpg",
+  },
+  { title: "PanVel - PDV móvel", image: "/panvel-pdv-movel.jpg" },
+  { title: "PanVel - Self-checkout", image: "/panvel-self-checkout.jpg" },
+  { title: "PanVel - App omniPedidos", image: "/panvel-omni-pedidos.jpg" },
+  { title: "PanVel - omniPDV", image: "/panvel-omni-pdv.jpg" },
+];
 
 const awards = [
   { date: "Ago de 2022", title: "Prêmio As 100+ Inovadoras no Uso de TI", issuer: "IT Mídia em parceria com a FIAP", association: "Grupo PanVel" },
@@ -52,15 +67,19 @@ export default function HomeExperience({
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isAwardsOpen, setIsAwardsOpen] = useState(false);
   const [isLeavingAbout, setIsLeavingAbout] = useState(false);
+  const [isLeavingWorks, setIsLeavingWorks] = useState(false);
+  const [selectedWork, setSelectedWork] = useState(0);
   const contactTriggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const awardsTriggerRef = useRef<HTMLButtonElement>(null);
   const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
   const isAbout = initialView === "about";
+  const isWorks = initialView === "works";
 
   useEffect(() => {
     router.prefetch("/");
     router.prefetch("/sobre");
+    router.prefetch("/trabalhos");
   }, [router]);
 
   useEffect(() => {
@@ -121,15 +140,19 @@ export default function HomeExperience({
   return (
     <main
       className={`home-screen${isAbout ? " about-screen" : ""}${
+        isWorks ? " works-screen" : ""
+      }${
         isLeavingAbout ? " is-leaving-about" : ""
-      }${isAwardsOpen ? " is-awards-open" : ""}`}
+      }${isLeavingWorks ? " is-leaving-works" : ""}${
+        isAwardsOpen ? " is-awards-open" : ""
+      }`}
       id="inicio"
     >
       <a className="skip-link" href="#conteudo">
         Ir para o conteúdo
       </a>
 
-      {!isAbout && (
+      {!isAbout && !isWorks && (
         <InteractiveStarfield
           particleCount={360}
           interactionRadius={155}
@@ -145,7 +168,7 @@ export default function HomeExperience({
           href="/"
           aria-label="Vicente Bortolini — início"
           onClick={(event) => {
-            if (!isAbout || isLeavingAbout) {
+            if ((!isAbout && !isWorks) || isLeavingAbout || isLeavingWorks) {
               return;
             }
 
@@ -160,7 +183,11 @@ export default function HomeExperience({
               return;
             }
 
-            setIsLeavingAbout(true);
+            if (isAbout) {
+              setIsLeavingAbout(true);
+            } else {
+              setIsLeavingWorks(true);
+            }
           }}
         >
           Vicente Bortolini
@@ -187,7 +214,12 @@ export default function HomeExperience({
       </header>
 
       <nav className="edge-navigation" aria-label="Navegação principal">
-        <Link className="edge-link edge-link-left" href="/trabalhos">
+        <Link
+          className={`edge-link edge-link-left${isWorks ? " is-active" : ""}`}
+          href="/trabalhos"
+          aria-current={isWorks ? "page" : undefined}
+          onClick={() => setIsLeavingWorks(false)}
+        >
           <span>Trabalhos</span>
         </Link>
         <Link
@@ -276,6 +308,76 @@ export default function HomeExperience({
             >
               Premiações / Reconhecimentos
             </button>
+          </div>
+        </section>
+      ) : isWorks ? (
+        <section
+          className="works-content"
+          id="conteudo"
+          aria-labelledby="works-title"
+          onAnimationEnd={(event) => {
+            if (
+              isLeavingWorks &&
+              event.animationName === "works-slide-out"
+            ) {
+              router.push("/");
+            }
+          }}
+        >
+          <div className="works-list-panel">
+            <h1 id="works-title">Trabalhos selecionados</h1>
+
+            <div className="works-list" role="list">
+              {selectedWorks.map((work, index) => (
+                <div
+                  className={`work-item${
+                    selectedWork === index ? " is-selected" : ""
+                  }`}
+                  role="listitem"
+                  key={work.title}
+                >
+                  <button
+                    className="work-title"
+                    type="button"
+                    aria-pressed={selectedWork === index}
+                    onClick={() => setSelectedWork(index)}
+                  >
+                    {work.title}
+                  </button>
+                  {selectedWork === index && (
+                    <button className="awards-link work-project-link" type="button">
+                      Visualizar projeto
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <a
+              className="awards-link works-more-link"
+              href="https://www.behance.net/vicentebortolini"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Veja mais projetos aqui
+            </a>
+          </div>
+
+          <div
+            className="works-preview has-cover"
+            aria-label={`Imagem do projeto ${selectedWorks[selectedWork].title}`}
+            role="img"
+          >
+            <Image
+              key={selectedWorks[selectedWork].image}
+              className="works-preview-image"
+              src={selectedWorks[selectedWork].image}
+              alt=""
+              fill
+              priority={selectedWork === 0}
+              quality={72}
+              sizes="50vw"
+            />
           </div>
         </section>
       ) : (
