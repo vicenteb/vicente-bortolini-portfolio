@@ -29,8 +29,18 @@ const LinkedInIcon = () => (
 );
 
 type HomeExperienceProps = {
-  initialView?: "home" | "about";
+  initialView?: "home" | "about" | "works";
 };
+
+const selectedWorks = [
+  "Lojas Renner - App Reposição",
+  "Sicredi Previdência - Portabilidade Multifundos",
+  "PanVel - App Checklist",
+  "PanVel - PDV móvel",
+  "PanVel - Self-checkout",
+  "PanVel - App omniPedidos",
+  "PanVel - omniPDV",
+];
 
 const awards = [
   { date: "Ago de 2022", title: "Prêmio As 100+ Inovadoras no Uso de TI", issuer: "IT Mídia em parceria com a FIAP", association: "Grupo PanVel" },
@@ -52,15 +62,19 @@ export default function HomeExperience({
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isAwardsOpen, setIsAwardsOpen] = useState(false);
   const [isLeavingAbout, setIsLeavingAbout] = useState(false);
+  const [isLeavingWorks, setIsLeavingWorks] = useState(false);
+  const [selectedWork, setSelectedWork] = useState(0);
   const contactTriggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const awardsTriggerRef = useRef<HTMLButtonElement>(null);
   const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
   const isAbout = initialView === "about";
+  const isWorks = initialView === "works";
 
   useEffect(() => {
     router.prefetch("/");
     router.prefetch("/sobre");
+    router.prefetch("/trabalhos");
   }, [router]);
 
   useEffect(() => {
@@ -121,15 +135,19 @@ export default function HomeExperience({
   return (
     <main
       className={`home-screen${isAbout ? " about-screen" : ""}${
+        isWorks ? " works-screen" : ""
+      }${
         isLeavingAbout ? " is-leaving-about" : ""
-      }${isAwardsOpen ? " is-awards-open" : ""}`}
+      }${isLeavingWorks ? " is-leaving-works" : ""}${
+        isAwardsOpen ? " is-awards-open" : ""
+      }`}
       id="inicio"
     >
       <a className="skip-link" href="#conteudo">
         Ir para o conteúdo
       </a>
 
-      {!isAbout && (
+      {!isAbout && !isWorks && (
         <InteractiveStarfield
           particleCount={360}
           interactionRadius={155}
@@ -145,7 +163,7 @@ export default function HomeExperience({
           href="/"
           aria-label="Vicente Bortolini — início"
           onClick={(event) => {
-            if (!isAbout || isLeavingAbout) {
+            if ((!isAbout && !isWorks) || isLeavingAbout || isLeavingWorks) {
               return;
             }
 
@@ -160,7 +178,11 @@ export default function HomeExperience({
               return;
             }
 
-            setIsLeavingAbout(true);
+            if (isAbout) {
+              setIsLeavingAbout(true);
+            } else {
+              setIsLeavingWorks(true);
+            }
           }}
         >
           Vicente Bortolini
@@ -187,7 +209,12 @@ export default function HomeExperience({
       </header>
 
       <nav className="edge-navigation" aria-label="Navegação principal">
-        <Link className="edge-link edge-link-left" href="/trabalhos">
+        <Link
+          className={`edge-link edge-link-left${isWorks ? " is-active" : ""}`}
+          href="/trabalhos"
+          aria-current={isWorks ? "page" : undefined}
+          onClick={() => setIsLeavingWorks(false)}
+        >
           <span>Trabalhos</span>
         </Link>
         <Link
@@ -277,6 +304,65 @@ export default function HomeExperience({
               Premiações / Reconhecimentos
             </button>
           </div>
+        </section>
+      ) : isWorks ? (
+        <section
+          className="works-content"
+          id="conteudo"
+          aria-labelledby="works-title"
+          onAnimationEnd={(event) => {
+            if (
+              isLeavingWorks &&
+              event.animationName === "works-slide-out"
+            ) {
+              router.push("/");
+            }
+          }}
+        >
+          <div className="works-list-panel">
+            <h1 id="works-title">Trabalhos selecionados</h1>
+
+            <div className="works-list" role="list">
+              {selectedWorks.map((work, index) => (
+                <div
+                  className={`work-item${
+                    selectedWork === index ? " is-selected" : ""
+                  }`}
+                  role="listitem"
+                  key={work}
+                >
+                  <button
+                    className="work-title"
+                    type="button"
+                    aria-pressed={selectedWork === index}
+                    onClick={() => setSelectedWork(index)}
+                  >
+                    {work}
+                  </button>
+                  {selectedWork === index && (
+                    <button className="awards-link work-project-link" type="button">
+                      Visualizar projeto
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <a
+              className="awards-link works-more-link"
+              href="https://www.behance.net/vicentebortolini"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Veja mais projetos aqui
+            </a>
+          </div>
+
+          <div
+            className="works-preview"
+            aria-label={`Imagem do projeto ${selectedWorks[selectedWork]}`}
+            role="img"
+          />
         </section>
       ) : (
         <section className="home-hero" id="conteudo" aria-labelledby="home-title">
