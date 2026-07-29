@@ -91,6 +91,7 @@ export default function HomeExperience({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const awardsTriggerRef = useRef<HTMLButtonElement>(null);
   const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const projectContentRef = useRef<HTMLElement>(null);
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
   const isProject = initialView === "rennerProject";
@@ -373,17 +374,12 @@ export default function HomeExperience({
                   </button>
                   {selectedWork === index &&
                     (index === 0 ? (
-                      <button
+                      <a
                         className="awards-link work-project-link"
-                        type="button"
-                        onClick={() =>
-                          router.push(
-                            "/trabalhos/lojas-renner-app-reposicao",
-                          )
-                        }
+                        href="/trabalhos/lojas-renner-app-reposicao"
                       >
                         Visualizar projeto
-                      </button>
+                      </a>
                     ) : (
                       <button
                         className="awards-link work-project-link"
@@ -425,6 +421,7 @@ export default function HomeExperience({
         </section>
       ) : isProject ? (
         <section
+          ref={projectContentRef}
           className="project-content"
           id="conteudo"
           aria-labelledby="project-title"
@@ -467,7 +464,22 @@ export default function HomeExperience({
           </div>
 
           <div className="project-footer">
-            <a className="project-back-to-top" href="#project-top">
+            <a
+              className="project-back-to-top"
+              href="#conteudo"
+              onClick={(event) => {
+                event.preventDefault();
+                projectContentRef.current?.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+                window.history.replaceState(
+                  null,
+                  "",
+                  window.location.pathname,
+                );
+              }}
+            >
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
