@@ -835,6 +835,14 @@ button:focus-visible {
   }
 }
 
+@media (hover: none) {
+  .contact-close:focus,
+  .contact-close:focus-visible {
+    border-radius: 0;
+    outline: 0;
+  }
+}
+
 @media (max-width: 760px) {
   .home-screen {
     min-height: 32rem;
@@ -946,7 +954,7 @@ button:focus-visible {
   .awards-overlay {
     padding: 6.4rem 3.55rem 5.8rem;
     display: block;
-    background: var(--background);
+    background: transparent;
   }
 
   .awards-header {
@@ -1006,6 +1014,9 @@ button:focus-visible {
   .contact-drawer {
     min-height: 10rem;
     padding: 3.7rem 1rem 1.85rem;
+    border-top: 0;
+    background: #0b0d13;
+    box-shadow: none;
   }
 
   .contact-title {
@@ -1077,16 +1088,11 @@ button:focus-visible {
     align-self: start;
   }
 
-  .about-screen.is-awards-open .about-photo {
-    opacity: 0;
-    visibility: hidden;
-  }
-
   .about-screen .awards-overlay {
     grid-template-columns: minmax(0, 1fr);
     padding: clamp(7.4rem, 13vh, 9.5rem)
       clamp(5.5rem, 7.5vw, 7.5rem) clamp(5.5rem, 9vh, 7rem);
-    background: var(--background);
+    background: transparent;
     gap: 0;
   }
 

@@ -77,11 +77,19 @@ export default function HomeExperience({
     };
 
     document.addEventListener("keydown", onKeyDown);
-    closeButtonRef.current?.focus();
+    const supportsPrecisePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+
+    if (supportsPrecisePointer) {
+      closeButtonRef.current?.focus();
+    }
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      contactTrigger?.focus();
+      if (supportsPrecisePointer) {
+        contactTrigger?.focus();
+      }
     };
   }, [isContactOpen]);
 
@@ -94,11 +102,19 @@ export default function HomeExperience({
     };
 
     document.addEventListener("keydown", onKeyDown);
-    awardsCloseButtonRef.current?.focus({ preventScroll: true });
+    const supportsPrecisePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+
+    if (supportsPrecisePointer) {
+      awardsCloseButtonRef.current?.focus({ preventScroll: true });
+    }
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      awardsTrigger?.focus({ preventScroll: true });
+      if (supportsPrecisePointer) {
+        awardsTrigger?.focus({ preventScroll: true });
+      }
     };
   }, [isAwardsOpen]);
 
