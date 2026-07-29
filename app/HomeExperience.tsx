@@ -29,7 +29,12 @@ const LinkedInIcon = () => (
 );
 
 type HomeExperienceProps = {
-  initialView?: "home" | "about" | "works" | "rennerProject";
+  initialView?:
+    | "home"
+    | "about"
+    | "works"
+    | "rennerProject"
+    | "sicrediProject";
 };
 
 const selectedWorks = [
@@ -65,6 +70,46 @@ const rennerProjectImages = [
   { src: "/renner-15-agilize-renner.jpg", width: 1400, height: 2480 },
 ];
 
+const sicrediProjectImages = [
+  { src: "/sicredi-case-01.jpg", width: 1055, height: 1493 },
+  { src: "/sicredi-case-02.jpg", width: 1055, height: 1491 },
+  { src: "/sicredi-case-03.jpg", width: 1055, height: 1491 },
+  { src: "/sicredi-case-04.jpg", width: 1055, height: 1628 },
+  { src: "/sicredi-case-05.jpg", width: 1055, height: 1470 },
+  { src: "/sicredi-case-06.jpg", width: 1055, height: 1330 },
+  { src: "/sicredi-case-07.jpg", width: 1055, height: 1080 },
+  { src: "/sicredi-case-08.jpg", width: 1055, height: 1080 },
+  { src: "/sicredi-case-09.jpg", width: 1055, height: 1399 },
+  { src: "/sicredi-case-10.jpg", width: 1055, height: 1865 },
+  { src: "/sicredi-case-11.jpg", width: 1055, height: 1531 },
+  { src: "/sicredi-case-12.jpg", width: 1055, height: 1452 },
+  { src: "/sicredi-case-13.jpg", width: 1055, height: 1452 },
+  { src: "/sicredi-case-14.jpg", width: 1055, height: 1318 },
+  { src: "/sicredi-case-15.jpg", width: 1055, height: 1664 },
+];
+
+const projectDetails = {
+  rennerProject: {
+    title: "Lojas Renner - App Reposição",
+    subtitle: "Vendas e Estoque em sintonia",
+    year: "2015 / 2026 - AI Redesign",
+    description:
+      "A comunicação fragmentada entre o salão de vendas e o estoque dificultava o acompanhamento das solicitações, aumentava o tempo de espera e comprometia a disponibilidade dos produtos para o cliente. O Reposição conecta as duas equipes em uma única jornada. Pelo app, é possível solicitar produtos por meio da leitura do código de barras, acompanhar a separação em tempo real e registrar atendimentos completos ou parciais, com status e notificações claros em cada etapa. O aplicativo foi totalmente redesenhado com o apoio do ChatGPT, desde a revisão dos fluxos e do design system até a implementação da experiência. Desenvolvido com React Native, Expo e TypeScript, utiliza recursos como câmera, animações Lottie e componentes SVG, com execução em iOS, Android e Web, versionamento no GitHub e publicação na Vercel.",
+    images: rennerProjectImages,
+    imageAlt: "Lojas Renner App Reposição",
+  },
+  sicrediProject: {
+    title: "Sicredi Previdência - Portabilidade Multifundos",
+    subtitle:
+      "Transformar uma operação complexa em uma jornada clara, segura e guiada.",
+    year: "2025 a 2026",
+    description:
+      "Esse foi o principal desafio do projeto de Portabilidade Multifundos no Portal da Agência Sicredi. A funcionalidade foi desenhada para apoiar o gerente de conta na transferência de planos de previdência entre instituições, organizando etapas como identificação do associado, processos SUSEP, certificados, tributação, fundos de origem e destino, conferência e assinatura. O resultado foi uma jornada web mais estruturada, rastreável e segura, com foco em: redução de dúvidas durante o atendimento; maior controle sobre cada etapa do processo; mais clareza para o gerente e para o associado; consistência visual e operacional com o design system. Além da Portabilidade Multifundos, o Portal da Agência também evoluiu com novas jornadas de previdência: Consultar Solicitações, Nova Contratação, novos métodos de pagamento, Resgate, Informe de Rendimentos, Aporte, Consultar Planos, Portabilidade interna e extrato.",
+    images: sicrediProjectImages,
+    imageAlt: "Sicredi Previdência Portabilidade Multifundos",
+  },
+};
+
 const awards = [
   { date: "Ago de 2022", title: "Prêmio As 100+ Inovadoras no Uso de TI", issuer: "IT Mídia em parceria com a FIAP", association: "Grupo PanVel" },
   { date: "Nov de 2021", title: "Prêmio ABRAPPE 2021 - Melhor case de inovação", issuer: "ABRAPPE", association: "Grupo PanVel" },
@@ -94,13 +139,19 @@ export default function HomeExperience({
   const projectContentRef = useRef<HTMLElement>(null);
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
-  const isProject = initialView === "rennerProject";
+  const isProject =
+    initialView === "rennerProject" || initialView === "sicrediProject";
+  const activeProject =
+    initialView === "sicrediProject"
+      ? projectDetails.sicrediProject
+      : projectDetails.rennerProject;
 
   useEffect(() => {
     router.prefetch("/");
     router.prefetch("/sobre");
     router.prefetch("/trabalhos");
     router.prefetch("/trabalhos/lojas-renner-app-reposicao");
+    router.prefetch("/trabalhos/sicredi-portabilidade-multifundos");
   }, [router]);
 
   useEffect(() => {
@@ -373,10 +424,14 @@ export default function HomeExperience({
                     {work.title}
                   </button>
                   {selectedWork === index &&
-                    (index === 0 ? (
+                    (index < 2 ? (
                       <a
                         className="awards-link work-project-link"
-                        href="/trabalhos/lojas-renner-app-reposicao"
+                        href={
+                          index === 0
+                            ? "/trabalhos/lojas-renner-app-reposicao"
+                            : "/trabalhos/sicredi-portabilidade-multifundos"
+                        }
                       >
                         Visualizar projeto
                       </a>
@@ -423,28 +478,14 @@ export default function HomeExperience({
           aria-labelledby="project-title"
         >
           <header className="project-intro" id="project-top">
-            <h1 id="project-title">Lojas Renner - App Reposição</h1>
-            <p className="project-subtitle">Vendas e Estoque em sintonia</p>
-            <p className="project-year">2015 / 2026 - AI Redesign</p>
-            <p className="project-description">
-              A comunicação fragmentada entre o salão de vendas e o estoque
-              dificultava o acompanhamento das solicitações, aumentava o tempo
-              de espera e comprometia a disponibilidade dos produtos para o
-              cliente. O Reposição conecta as duas equipes em uma única
-              jornada. Pelo app, é possível solicitar produtos por meio da
-              leitura do código de barras, acompanhar a separação em tempo real
-              e registrar atendimentos completos ou parciais, com status e
-              notificações claros em cada etapa. O aplicativo foi totalmente
-              redesenhado com o apoio do ChatGPT, desde a revisão dos fluxos e
-              do design system até a implementação da experiência. Desenvolvido
-              com React Native, Expo e TypeScript, utiliza recursos como
-              câmera, animações Lottie e componentes SVG, com execução em iOS,
-              Android e Web, versionamento no GitHub e publicação na Vercel.
-            </p>
+            <h1 id="project-title">{activeProject.title}</h1>
+            <p className="project-subtitle">{activeProject.subtitle}</p>
+            <p className="project-year">{activeProject.year}</p>
+            <p className="project-description">{activeProject.description}</p>
           </header>
 
           <div className="project-gallery" aria-label="Imagens do projeto">
-            {rennerProjectImages.map((image, index) => (
+            {activeProject.images.map((image, index) => (
               <SkeletonImage
                 containerClassName="project-gallery-item"
                 containerStyle={{
@@ -453,7 +494,7 @@ export default function HomeExperience({
                 imageClassName="project-gallery-image"
                 key={image.src}
                 src={image.src}
-                alt={`Lojas Renner App Reposição — imagem ${index + 1} de ${rennerProjectImages.length}`}
+                alt={`${activeProject.imageAlt} — imagem ${index + 1} de ${activeProject.images.length}`}
                 width={image.width}
                 height={image.height}
                 sizes="(max-width: 760px) calc(100vw - 7.1rem), (max-width: 1366px) 80vw, 78rem"
