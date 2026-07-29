@@ -34,22 +34,41 @@ type HomeExperienceProps = {
     | "about"
     | "works"
     | "rennerProject"
-    | "sicrediProject";
+    | "sicrediProject"
+    | "panvelPdvMovelProject";
 };
 
 const selectedWorks = [
   {
     title: "Lojas Renner - App Reposição",
     image: "/lojas-renner-app-reposicao.jpg",
+    projectHref: "/trabalhos/lojas-renner-app-reposicao",
   },
   {
     title: "Sicredi Previdência - Portabilidade Multifundos",
     image: "/sicredi-portabilidade-multifundos.jpg",
+    projectHref: "/trabalhos/sicredi-portabilidade-multifundos",
   },
-  { title: "PanVel - PDV móvel", image: "/panvel-pdv-movel.jpg" },
-  { title: "PanVel - Self-checkout", image: "/panvel-self-checkout.jpg" },
-  { title: "PanVel - App omniPedidos", image: "/panvel-omni-pedidos.jpg" },
-  { title: "PanVel - omniPDV", image: "/panvel-omni-pdv.jpg" },
+  {
+    title: "PanVel - PDV móvel",
+    image: "/panvel-pdv-movel.jpg",
+    projectHref: "/trabalhos/panvel-pdv-movel",
+  },
+  {
+    title: "PanVel - Self-checkout",
+    image: "/panvel-self-checkout.jpg",
+    projectHref: null,
+  },
+  {
+    title: "PanVel - App omniPedidos",
+    image: "/panvel-omni-pedidos.jpg",
+    projectHref: null,
+  },
+  {
+    title: "PanVel - omniPDV",
+    image: "/panvel-omni-pdv.jpg",
+    projectHref: null,
+  },
 ];
 
 const rennerProjectImages = [
@@ -88,6 +107,19 @@ const sicrediProjectImages = [
   { src: "/sicredi-case-15.jpg", width: 1055, height: 1664 },
 ];
 
+const panvelPdvMovelProjectImages = [
+  { src: "/panvel-pdv-movel-case-01.jpg", width: 1054, height: 1492 },
+  { src: "/panvel-pdv-movel-case-02.jpg", width: 1055, height: 1491 },
+  { src: "/panvel-pdv-movel-case-03.jpg", width: 1055, height: 1491 },
+  { src: "/panvel-pdv-movel-case-04.jpg", width: 1055, height: 1491 },
+  { src: "/panvel-pdv-movel-case-05.jpg", width: 1055, height: 1491 },
+  { src: "/panvel-pdv-movel-case-06.jpg", width: 1055, height: 1491 },
+  { src: "/panvel-pdv-movel-case-07.jpg", width: 1055, height: 1491 },
+  { src: "/panvel-pdv-movel-case-08.jpg", width: 1055, height: 1491 },
+  { src: "/panvel-pdv-movel-case-09.jpg", width: 1055, height: 1491 },
+  { src: "/panvel-pdv-movel-case-10.jpg", width: 1054, height: 1493 },
+];
+
 const projectDetails = {
   rennerProject: {
     title: "Lojas Renner - App Reposição",
@@ -107,6 +139,15 @@ const projectDetails = {
       "Esse foi o principal desafio do projeto de Portabilidade Multifundos no Portal da Agência Sicredi. A funcionalidade foi desenhada para apoiar o gerente de conta na transferência de planos de previdência entre instituições, organizando etapas como identificação do associado, processos SUSEP, certificados, tributação, fundos de origem e destino, conferência e assinatura. O resultado foi uma jornada web mais estruturada, rastreável e segura, com foco em: redução de dúvidas durante o atendimento; maior controle sobre cada etapa do processo; mais clareza para o gerente e para o associado; consistência visual e operacional com o design system. Além da Portabilidade Multifundos, o Portal da Agência também evoluiu com novas jornadas de previdência: Consultar Solicitações, Nova Contratação, novos métodos de pagamento, Resgate, Informe de Rendimentos, Aporte, Consultar Planos, Portabilidade interna e extrato.",
     images: sicrediProjectImages,
     imageAlt: "Sicredi Previdência Portabilidade Multifundos",
+  },
+  panvelPdvMovelProject: {
+    title: "PanVel - PDV móvel",
+    subtitle: "Checkout móvel para agilizar o atendimento nas lojas físicas",
+    year: "2025",
+    description:
+      "Participei da criação do PDV Móvel do Grupo PanVel, uma solução desenvolvida para otimizar a experiência de compra nas lojas físicas e aumentar a eficiência operacional em horários de pico. O projeto permitiu que colaboradores realizassem vendas diretamente no salão da loja utilizando dispositivos móveis capazes de escanear códigos de barras, consultar produtos e processar pagamentos de forma rápida e integrada. A iniciativa teve como foco reduzir filas, agilizar o atendimento e oferecer uma experiência de compra mais fluida e conveniente para os clientes, fortalecendo a estratégia omnichannel e a transformação digital do varejo farmacêutico. Minha atuação envolveu UX/UI, definição de fluxos operacionais, testes com usuários, validação da solução em pilotos com filiais selecionadas e evolução contínua da experiência do produto.",
+    images: panvelPdvMovelProjectImages,
+    imageAlt: "PanVel PDV móvel",
   },
 };
 
@@ -140,11 +181,15 @@ export default function HomeExperience({
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
   const isProject =
-    initialView === "rennerProject" || initialView === "sicrediProject";
+    initialView === "rennerProject" ||
+    initialView === "sicrediProject" ||
+    initialView === "panvelPdvMovelProject";
   const activeProject =
     initialView === "sicrediProject"
       ? projectDetails.sicrediProject
-      : projectDetails.rennerProject;
+      : initialView === "panvelPdvMovelProject"
+        ? projectDetails.panvelPdvMovelProject
+        : projectDetails.rennerProject;
 
   useEffect(() => {
     router.prefetch("/");
@@ -152,6 +197,7 @@ export default function HomeExperience({
     router.prefetch("/trabalhos");
     router.prefetch("/trabalhos/lojas-renner-app-reposicao");
     router.prefetch("/trabalhos/sicredi-portabilidade-multifundos");
+    router.prefetch("/trabalhos/panvel-pdv-movel");
   }, [router]);
 
   useEffect(() => {
@@ -424,14 +470,10 @@ export default function HomeExperience({
                     {work.title}
                   </button>
                   {selectedWork === index &&
-                    (index < 2 ? (
+                    (work.projectHref ? (
                       <a
                         className="awards-link work-project-link"
-                        href={
-                          index === 0
-                            ? "/trabalhos/lojas-renner-app-reposicao"
-                            : "/trabalhos/sicredi-portabilidade-multifundos"
-                        }
+                        href={work.projectHref}
                       >
                         Visualizar projeto
                       </a>
