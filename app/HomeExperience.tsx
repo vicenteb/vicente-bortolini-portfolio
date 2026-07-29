@@ -29,7 +29,7 @@ const LinkedInIcon = () => (
 );
 
 type HomeExperienceProps = {
-  initialView?: "home" | "about" | "works";
+  initialView?: "home" | "about" | "works" | "rennerProject";
 };
 
 const selectedWorks = [
@@ -45,6 +45,24 @@ const selectedWorks = [
   { title: "PanVel - Self-checkout", image: "/panvel-self-checkout.jpg" },
   { title: "PanVel - App omniPedidos", image: "/panvel-omni-pedidos.jpg" },
   { title: "PanVel - omniPDV", image: "/panvel-omni-pdv.jpg" },
+];
+
+const rennerProjectImages = [
+  { src: "/lojas-renner-app-reposicao.jpg", width: 1400, height: 2900 },
+  { src: "/renner-02-problema.jpg", width: 1400, height: 2254 },
+  { src: "/renner-03-login.jpg", width: 1400, height: 2254 },
+  { src: "/renner-04-perfis.jpg", width: 1400, height: 2036 },
+  { src: "/renner-05-vendas-bipagem.jpg", width: 1400, height: 2036 },
+  { src: "/renner-06-vendas-produto.jpg", width: 1400, height: 2900 },
+  { src: "/renner-07-vendas-confirmacao.jpg", width: 1400, height: 2036 },
+  { src: "/renner-08-estoque-solicitacao.jpg", width: 1400, height: 2036 },
+  { src: "/renner-09-estoque-status.jpg", width: 1400, height: 2036 },
+  { src: "/renner-10-estoque-separacao.jpg", width: 1400, height: 2528 },
+  { src: "/renner-11-estoque-final.jpg", width: 1400, height: 2036 },
+  { src: "/renner-12-design-system.jpg", width: 1400, height: 2900 },
+  { src: "/renner-13-tecnologias.jpg", width: 1400, height: 2900 },
+  { src: "/renner-14-encerramento.jpg", width: 1400, height: 2476 },
+  { src: "/renner-15-agilize-renner.jpg", width: 1400, height: 2480 },
 ];
 
 const awards = [
@@ -73,13 +91,16 @@ export default function HomeExperience({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const awardsTriggerRef = useRef<HTMLButtonElement>(null);
   const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const projectContentRef = useRef<HTMLElement>(null);
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
+  const isProject = initialView === "rennerProject";
 
   useEffect(() => {
     router.prefetch("/");
     router.prefetch("/sobre");
     router.prefetch("/trabalhos");
+    router.prefetch("/trabalhos/lojas-renner-app-reposicao");
   }, [router]);
 
   useEffect(() => {
@@ -141,7 +162,7 @@ export default function HomeExperience({
     <main
       className={`home-screen${isAbout ? " about-screen" : ""}${
         isWorks ? " works-screen" : ""
-      }${
+      }${isProject ? " project-screen" : ""}${
         isLeavingAbout ? " is-leaving-about" : ""
       }${isLeavingWorks ? " is-leaving-works" : ""}${
         isAwardsOpen ? " is-awards-open" : ""
@@ -152,7 +173,7 @@ export default function HomeExperience({
         Ir para o conteúdo
       </a>
 
-      {!isAbout && !isWorks && (
+      {!isAbout && !isWorks && !isProject && (
         <InteractiveStarfield
           particleCount={360}
           interactionRadius={155}
@@ -168,7 +189,12 @@ export default function HomeExperience({
           href="/"
           aria-label="Vicente Bortolini — início"
           onClick={(event) => {
-            if ((!isAbout && !isWorks) || isLeavingAbout || isLeavingWorks) {
+            if (
+              isProject ||
+              (!isAbout && !isWorks && !isProject) ||
+              isLeavingAbout ||
+              isLeavingWorks
+            ) {
               return;
             }
 
@@ -215,9 +241,11 @@ export default function HomeExperience({
 
       <nav className="edge-navigation" aria-label="Navegação principal">
         <Link
-          className={`edge-link edge-link-left${isWorks ? " is-active" : ""}`}
+          className={`edge-link edge-link-left${
+            isWorks || isProject ? " is-active" : ""
+          }`}
           href="/trabalhos"
-          aria-current={isWorks ? "page" : undefined}
+          aria-current={isWorks || isProject ? "page" : undefined}
           onClick={() => setIsLeavingWorks(false)}
         >
           <span>Trabalhos</span>
@@ -344,11 +372,22 @@ export default function HomeExperience({
                   >
                     {work.title}
                   </button>
-                  {selectedWork === index && (
-                    <button className="awards-link work-project-link" type="button">
-                      Visualizar projeto
-                    </button>
-                  )}
+                  {selectedWork === index &&
+                    (index === 0 ? (
+                      <a
+                        className="awards-link work-project-link"
+                        href="/trabalhos/lojas-renner-app-reposicao"
+                      >
+                        Visualizar projeto
+                      </a>
+                    ) : (
+                      <button
+                        className="awards-link work-project-link"
+                        type="button"
+                      >
+                        Visualizar projeto
+                      </button>
+                    ))}
                 </div>
               ))}
             </div>
@@ -378,6 +417,78 @@ export default function HomeExperience({
               quality={72}
               sizes="50vw"
             />
+          </div>
+        </section>
+      ) : isProject ? (
+        <section
+          ref={projectContentRef}
+          className="project-content"
+          id="conteudo"
+          aria-labelledby="project-title"
+        >
+          <header className="project-intro" id="project-top">
+            <h1 id="project-title">Lojas Renner - App Reposição</h1>
+            <p className="project-subtitle">Vendas e Estoque em sintonia</p>
+            <p className="project-year">2015 / 2026 - AI Redesign</p>
+            <p className="project-description">
+              A comunicação fragmentada entre o salão de vendas e o estoque
+              dificultava o acompanhamento das solicitações, aumentava o tempo
+              de espera e comprometia a disponibilidade dos produtos para o
+              cliente. O Reposição conecta as duas equipes em uma única
+              jornada. Pelo app, é possível solicitar produtos por meio da
+              leitura do código de barras, acompanhar a separação em tempo real
+              e registrar atendimentos completos ou parciais, com status e
+              notificações claros em cada etapa. O aplicativo foi totalmente
+              redesenhado com o apoio do ChatGPT, desde a revisão dos fluxos e
+              do design system até a implementação da experiência. Desenvolvido
+              com React Native, Expo e TypeScript, utiliza recursos como
+              câmera, animações Lottie e componentes SVG, com execução em iOS,
+              Android e Web, versionamento no GitHub e publicação na Vercel.
+            </p>
+          </header>
+
+          <div className="project-gallery" aria-label="Imagens do projeto">
+            {rennerProjectImages.map((image, index) => (
+              <Image
+                className="project-gallery-image"
+                key={image.src}
+                src={image.src}
+                alt={`Lojas Renner App Reposição — imagem ${index + 1} de ${rennerProjectImages.length}`}
+                width={image.width}
+                height={image.height}
+                sizes="(max-width: 760px) calc(100vw - 7.1rem), (max-width: 1366px) 80vw, 78rem"
+                quality={76}
+                priority={index === 0}
+              />
+            ))}
+          </div>
+
+          <div className="project-footer">
+            <a
+              className="project-back-to-top"
+              href="#conteudo"
+              onClick={(event) => {
+                event.preventDefault();
+                projectContentRef.current?.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+                window.history.replaceState(
+                  null,
+                  "",
+                  window.location.pathname,
+                );
+              }}
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                focusable="false"
+              >
+                <path d="M12 19V5M6.5 10.5 12 5l5.5 5.5" />
+              </svg>
+              <span>Voltar ao topo</span>
+            </a>
           </div>
         </section>
       ) : (
