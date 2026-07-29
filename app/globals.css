@@ -896,6 +896,8 @@ button:focus-visible {
 
   .about-photo img {
     object-position: 50% 0%;
+    transform: scale(0.97);
+    transform-origin: 50% 0;
   }
 
   .about-copy {
@@ -1046,7 +1048,9 @@ button:focus-visible {
   }
 
   .about-photo img {
-    object-position: 50% 27%;
+    object-position: 50% 0%;
+    transform: scale(0.97);
+    transform-origin: 50% 0;
   }
 
   .about-copy {
