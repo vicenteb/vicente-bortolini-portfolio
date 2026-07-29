@@ -518,6 +518,64 @@ a {
   height: auto;
 }
 
+.project-gallery-item {
+  width: 100%;
+}
+
+.media-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(244, 242, 237, 0.025);
+}
+
+.media-skeleton-placeholder {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(244, 242, 237, 0.075) 46%,
+      rgba(88, 70, 202, 0.1) 51%,
+      rgba(244, 242, 237, 0.075) 56%,
+      transparent 70%
+    ),
+    linear-gradient(145deg, rgba(88, 70, 202, 0.08), transparent 52%);
+  background-size: 250% 100%, 100% 100%;
+  animation: media-skeleton-shimmer 1.75s ease-in-out infinite;
+  opacity: 1;
+  transition: opacity 420ms ease;
+  pointer-events: none;
+}
+
+.media-skeleton .media-skeleton-image {
+  opacity: 0;
+  transition: opacity 520ms ease;
+}
+
+.media-skeleton.is-loaded .media-skeleton-placeholder {
+  opacity: 0;
+}
+
+.media-skeleton.is-loaded .media-skeleton-image {
+  opacity: 1;
+}
+
+.media-skeleton.about-photo.is-loaded .media-skeleton-image {
+  opacity: 0.95;
+}
+
+@keyframes media-skeleton-shimmer {
+  from {
+    background-position: 130% 0, 0 0;
+  }
+
+  to {
+    background-position: -130% 0, 0 0;
+  }
+}
+
 .project-footer {
   display: flex;
   width: 100%;
