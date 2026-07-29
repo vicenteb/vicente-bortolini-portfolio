@@ -47,6 +47,24 @@ const selectedWorks = [
   { title: "PanVel - omniPDV", image: "/panvel-omni-pdv.jpg" },
 ];
 
+const rennerProjectImages = [
+  { src: "/lojas-renner-app-reposicao.jpg", width: 1400, height: 2900 },
+  { src: "/renner-02-problema.jpg", width: 1400, height: 2254 },
+  { src: "/renner-03-login.jpg", width: 1400, height: 2254 },
+  { src: "/renner-04-perfis.jpg", width: 1400, height: 2036 },
+  { src: "/renner-05-vendas-bipagem.jpg", width: 1400, height: 2036 },
+  { src: "/renner-06-vendas-produto.jpg", width: 1400, height: 2900 },
+  { src: "/renner-07-vendas-confirmacao.jpg", width: 1400, height: 2036 },
+  { src: "/renner-08-estoque-solicitacao.jpg", width: 1400, height: 2036 },
+  { src: "/renner-09-estoque-status.jpg", width: 1400, height: 2036 },
+  { src: "/renner-10-estoque-separacao.jpg", width: 1400, height: 2528 },
+  { src: "/renner-11-estoque-final.jpg", width: 1400, height: 2036 },
+  { src: "/renner-12-design-system.jpg", width: 1400, height: 2900 },
+  { src: "/renner-13-tecnologias.jpg", width: 1400, height: 2900 },
+  { src: "/renner-14-encerramento.jpg", width: 1400, height: 2476 },
+  { src: "/renner-15-agilize-renner.jpg", width: 1400, height: 2480 },
+];
+
 const awards = [
   { date: "Ago de 2022", title: "Prêmio As 100+ Inovadoras no Uso de TI", issuer: "IT Mídia em parceria com a FIAP", association: "Grupo PanVel" },
   { date: "Nov de 2021", title: "Prêmio ABRAPPE 2021 - Melhor case de inovação", issuer: "ABRAPPE", association: "Grupo PanVel" },
@@ -407,20 +425,40 @@ export default function HomeExperience({
           aria-labelledby="project-title"
         >
           <header className="project-intro">
-            <h1 id="project-title">Lojas Renner — App Reposição</h1>
-            <p className="project-subtitle">Subtítulo do projeto</p>
-            <p className="project-year">Ano do projeto</p>
+            <h1 id="project-title">Lojas Renner - App Reposição</h1>
+            <p className="project-subtitle">Vendas e Estoque em sintonia</p>
+            <p className="project-year">2015 / 2026 - AI Redesign</p>
             <p className="project-description">
-              Pequeno texto descritivo sobre o contexto, o desafio e a
-              participação no projeto.
+              A comunicação fragmentada entre o salão de vendas e o estoque
+              dificultava o acompanhamento das solicitações, aumentava o tempo
+              de espera e comprometia a disponibilidade dos produtos para o
+              cliente. O Reposição conecta as duas equipes em uma única
+              jornada. Pelo app, é possível solicitar produtos por meio da
+              leitura do código de barras, acompanhar a separação em tempo real
+              e registrar atendimentos completos ou parciais, com status e
+              notificações claros em cada etapa. O aplicativo foi totalmente
+              redesenhado com o apoio do ChatGPT, desde a revisão dos fluxos e
+              do design system até a implementação da experiência. Desenvolvido
+              com React Native, Expo e TypeScript, utiliza recursos como
+              câmera, animações Lottie e componentes SVG, com execução em iOS,
+              Android e Web, versionamento no GitHub e publicação na Vercel.
             </p>
           </header>
 
           <div className="project-gallery" aria-label="Imagens do projeto">
-            <div className="project-placeholder project-placeholder-wide" />
-            <div className="project-placeholder project-placeholder-tall" />
-            <div className="project-placeholder project-placeholder-wide" />
-            <div className="project-placeholder project-placeholder-square" />
+            {rennerProjectImages.map((image, index) => (
+              <Image
+                className="project-gallery-image"
+                key={image.src}
+                src={image.src}
+                alt={`Lojas Renner App Reposição — imagem ${index + 1} de ${rennerProjectImages.length}`}
+                width={image.width}
+                height={image.height}
+                sizes="(max-width: 760px) calc(100vw - 7.1rem), (max-width: 1366px) 80vw, 78rem"
+                quality={76}
+                priority={index === 0}
+              />
+            ))}
           </div>
         </section>
       ) : (

@@ -511,28 +511,10 @@ a {
   gap: clamp(1.5rem, 3vw, 3rem);
 }
 
-.project-placeholder {
+.project-gallery-image {
+  display: block;
   width: 100%;
-  min-height: 24rem;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 38%),
-    var(--link-accent);
-}
-
-.project-placeholder-wide {
-  aspect-ratio: 16 / 9;
-}
-
-.project-placeholder-tall {
-  width: min(100%, 52rem);
-  aspect-ratio: 4 / 5;
-  align-self: center;
-}
-
-.project-placeholder-square {
-  width: min(100%, 64rem);
-  aspect-ratio: 1;
-  align-self: center;
+  height: auto;
 }
 
 @keyframes project-fade-in {
@@ -1198,10 +1180,6 @@ button:focus-visible {
 
   .project-gallery {
     gap: 1.25rem;
-  }
-
-  .project-placeholder {
-    min-height: 15rem;
   }
 
   .about-screen {
