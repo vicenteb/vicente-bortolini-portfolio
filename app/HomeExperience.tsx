@@ -367,10 +367,11 @@ export default function HomeExperience({
             {selectedWork === 0 && (
               <Image
                 className="works-preview-image"
-                src="/lojas-renner-app-reposicao.png"
+                src="/lojas-renner-app-reposicao.jpg"
                 alt=""
                 fill
                 priority
+                quality={72}
                 sizes="50vw"
               />
             )}

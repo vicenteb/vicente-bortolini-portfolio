@@ -285,6 +285,10 @@ a {
   background: var(--background);
 }
 
+.works-screen .full-name {
+  text-shadow: 0 2px 10px rgba(5, 6, 10, 0.58);
+}
+
 .works-content {
   position: absolute;
   z-index: 2;
@@ -385,9 +389,9 @@ a {
   z-index: 1;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(5, 6, 10, 0.48), transparent 24%),
-    linear-gradient(90deg, rgba(5, 6, 10, 0.42), transparent 24%),
-    rgba(5, 6, 10, 0.22);
+    linear-gradient(180deg, rgba(5, 6, 10, 0.6), transparent 27%),
+    linear-gradient(90deg, rgba(5, 6, 10, 0.54), transparent 27%),
+    rgba(5, 6, 10, 0.32);
   content: "";
   pointer-events: none;
 }
