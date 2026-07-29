@@ -485,6 +485,11 @@ a {
   transition: visibility 0s linear;
 }
 
+.about-screen.is-awards-open .home-header,
+.about-screen.is-awards-open .edge-link {
+  z-index: 25;
+}
+
 .awards-drawer {
   position: relative;
   display: flex;
