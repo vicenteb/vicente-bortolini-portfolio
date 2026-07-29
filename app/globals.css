@@ -296,9 +296,10 @@ a {
 
 .works-list-panel {
   display: flex;
+  grid-column: 2;
   min-width: 0;
   flex-direction: column;
-  justify-content: center;
+  justify-content: stretch;
   padding: clamp(7.5rem, 12vh, 9rem) clamp(5rem, 8vw, 9.5rem)
     clamp(5.5rem, 9vh, 7rem);
   overflow: auto;
@@ -308,7 +309,7 @@ a {
 }
 
 .works-list-panel h1 {
-  margin: 0 0 clamp(1.8rem, 4vh, 3rem);
+  margin: 0 0 clamp(1.2rem, 2.5vh, 2rem);
   color: rgba(244, 242, 237, 0.72);
   font-family: "Roboto", sans-serif;
   font-size: clamp(0.72rem, 0.8vw, 0.86rem);
@@ -319,8 +320,10 @@ a {
 
 .works-list {
   display: flex;
+  min-height: 0;
+  flex: 1;
   flex-direction: column;
-  gap: clamp(0.8rem, 1.65vh, 1.25rem);
+  justify-content: space-evenly;
 }
 
 .work-item {
@@ -333,10 +336,11 @@ a {
   border: 0;
   background: transparent;
   color: rgba(244, 242, 237, 0.58);
-  font-family: "Roboto", sans-serif;
-  font-size: clamp(0.86rem, 1.05vw, 1.08rem);
-  font-weight: 300;
-  line-height: 1.4;
+  font-family: var(--font-title);
+  font-size: clamp(1.05rem, 1.42vw, 1.65rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.22;
   text-align: left;
   cursor: pointer;
   transition: color 220ms ease;
@@ -344,7 +348,7 @@ a {
 
 .work-item.is-selected .work-title {
   color: rgba(244, 242, 237, 0.96);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .work-project-link {
@@ -354,11 +358,13 @@ a {
 
 .works-more-link {
   align-self: flex-start;
-  margin-top: clamp(1.9rem, 4vh, 3rem);
+  margin-top: clamp(1.2rem, 2.5vh, 2rem);
   font-size: clamp(0.72rem, 0.76vw, 0.82rem);
 }
 
 .works-preview {
+  grid-column: 1;
+  grid-row: 1;
   min-width: 0;
   min-height: 0;
   background:
@@ -1000,10 +1006,12 @@ button:focus-visible {
   }
 
   .works-preview {
+    grid-column: 1;
     grid-row: 1;
   }
 
   .works-list-panel {
+    grid-column: 1;
     grid-row: 2;
     justify-content: flex-start;
     padding: 2.2rem 3.55rem
@@ -1020,7 +1028,7 @@ button:focus-visible {
   }
 
   .work-title {
-    font-size: 0.9rem;
+    font-size: 1.05rem;
   }
 
   .works-more-link {
@@ -1212,10 +1220,12 @@ button:focus-visible {
   }
 
   .works-preview {
+    grid-column: 1;
     grid-row: 1;
   }
 
   .works-list-panel {
+    grid-column: 1;
     grid-row: 2;
     justify-content: flex-start;
     padding: clamp(2.5rem, 4vh, 3.5rem)

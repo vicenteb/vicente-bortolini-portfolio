@@ -35,7 +35,6 @@ type HomeExperienceProps = {
 const selectedWorks = [
   "Lojas Renner - App Reposição",
   "Sicredi Previdência - Portabilidade Multifundos",
-  "PanVel - App Checklist",
   "PanVel - PDV móvel",
   "PanVel - Self-checkout",
   "PanVel - App omniPedidos",
