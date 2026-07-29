@@ -1002,19 +1002,17 @@ button:focus-visible {
 
   .works-content {
     grid-template-columns: 1fr;
-    grid-template-rows: 40svh 60svh;
+    grid-template-rows: 1fr;
   }
 
   .works-preview {
-    grid-column: 1;
-    grid-row: 1;
+    display: none;
   }
 
   .works-list-panel {
     grid-column: 1;
-    grid-row: 2;
-    justify-content: flex-start;
-    padding: 2.2rem 3.55rem
+    grid-row: 1;
+    padding: calc(7rem + env(safe-area-inset-top)) 3.55rem
       calc(7.2rem + env(safe-area-inset-bottom));
   }
 
@@ -1216,19 +1214,17 @@ button:focus-visible {
 @media (min-width: 761px) and (max-width: 1366px) and (pointer: coarse) {
   .works-content {
     grid-template-columns: 1fr;
-    grid-template-rows: 44svh 56svh;
+    grid-template-rows: 1fr;
   }
 
   .works-preview {
-    grid-column: 1;
-    grid-row: 1;
+    display: none;
   }
 
   .works-list-panel {
     grid-column: 1;
-    grid-row: 2;
-    justify-content: flex-start;
-    padding: clamp(2.5rem, 4vh, 3.5rem)
+    grid-row: 1;
+    padding: clamp(7.4rem, 13vh, 9.5rem)
       clamp(5.5rem, 7.5vw, 7.5rem) clamp(5.5rem, 9vh, 7rem);
   }
 
