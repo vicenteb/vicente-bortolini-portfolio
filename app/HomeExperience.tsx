@@ -358,10 +358,23 @@ export default function HomeExperience({
           </div>
 
           <div
-            className="works-preview"
+            className={`works-preview${
+              selectedWork === 0 ? " has-cover" : ""
+            }`}
             aria-label={`Imagem do projeto ${selectedWorks[selectedWork]}`}
             role="img"
-          />
+          >
+            {selectedWork === 0 && (
+              <Image
+                className="works-preview-image"
+                src="/lojas-renner-app-reposicao.png"
+                alt=""
+                fill
+                priority
+                sizes="50vw"
+              />
+            )}
+          </div>
         </section>
       ) : (
         <section className="home-hero" id="conteudo" aria-labelledby="home-title">
