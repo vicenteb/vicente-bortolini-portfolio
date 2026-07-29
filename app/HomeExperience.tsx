@@ -33,12 +33,18 @@ type HomeExperienceProps = {
 };
 
 const selectedWorks = [
-  "Lojas Renner - App Reposição",
-  "Sicredi Previdência - Portabilidade Multifundos",
-  "PanVel - PDV móvel",
-  "PanVel - Self-checkout",
-  "PanVel - App omniPedidos",
-  "PanVel - omniPDV",
+  {
+    title: "Lojas Renner - App Reposição",
+    image: "/lojas-renner-app-reposicao.jpg",
+  },
+  {
+    title: "Sicredi Previdência - Portabilidade Multifundos",
+    image: "/sicredi-portabilidade-multifundos.jpg",
+  },
+  { title: "PanVel - PDV móvel", image: "/panvel-pdv-movel.jpg" },
+  { title: "PanVel - Self-checkout", image: "/panvel-self-checkout.jpg" },
+  { title: "PanVel - App omniPedidos", image: "/panvel-omni-pedidos.jpg" },
+  { title: "PanVel - omniPDV", image: "/panvel-omni-pdv.jpg" },
 ];
 
 const awards = [
@@ -328,7 +334,7 @@ export default function HomeExperience({
                     selectedWork === index ? " is-selected" : ""
                   }`}
                   role="listitem"
-                  key={work}
+                  key={work.title}
                 >
                   <button
                     className="work-title"
@@ -336,7 +342,7 @@ export default function HomeExperience({
                     aria-pressed={selectedWork === index}
                     onClick={() => setSelectedWork(index)}
                   >
-                    {work}
+                    {work.title}
                   </button>
                   {selectedWork === index && (
                     <button className="awards-link work-project-link" type="button">
@@ -358,23 +364,20 @@ export default function HomeExperience({
           </div>
 
           <div
-            className={`works-preview${
-              selectedWork === 0 ? " has-cover" : ""
-            }`}
-            aria-label={`Imagem do projeto ${selectedWorks[selectedWork]}`}
+            className="works-preview has-cover"
+            aria-label={`Imagem do projeto ${selectedWorks[selectedWork].title}`}
             role="img"
           >
-            {selectedWork === 0 && (
-              <Image
-                className="works-preview-image"
-                src="/lojas-renner-app-reposicao.jpg"
-                alt=""
-                fill
-                priority
-                quality={72}
-                sizes="50vw"
-              />
-            )}
+            <Image
+              key={selectedWorks[selectedWork].image}
+              className="works-preview-image"
+              src={selectedWorks[selectedWork].image}
+              alt=""
+              fill
+              priority={selectedWork === 0}
+              quality={72}
+              sizes="50vw"
+            />
           </div>
         </section>
       ) : (
