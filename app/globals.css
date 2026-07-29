@@ -445,6 +445,7 @@ a {
   overscroll-behavior: contain;
   background: var(--background);
   animation: project-fade-in 680ms ease both;
+  scroll-behavior: smooth;
   scrollbar-color: rgba(231, 229, 225, 0.28) transparent;
   scrollbar-width: thin;
 }
@@ -495,7 +496,7 @@ a {
 }
 
 .project-description {
-  max-width: 44rem;
+  max-width: 54rem;
   margin: 2.25rem auto 0;
   color: rgba(244, 242, 237, 0.7);
   font-size: clamp(0.9rem, 1.08vw, 1.05rem);
@@ -515,6 +516,43 @@ a {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.project-footer {
+  display: flex;
+  width: 100%;
+  margin: clamp(3rem, 7vh, 5.5rem) auto 0;
+  justify-content: center;
+}
+
+.project-back-to-top {
+  display: inline-flex;
+  min-height: 3rem;
+  padding: 0.85rem 1.15rem;
+  border: 1px solid rgba(244, 242, 237, 0.18);
+  align-items: center;
+  gap: 0.7rem;
+  background: rgba(244, 242, 237, 0.07);
+  color: rgba(244, 242, 237, 0.82);
+  font-family: "Roboto", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    color 220ms ease;
+}
+
+.project-back-to-top svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
 }
 
 @keyframes project-fade-in {
@@ -1080,6 +1118,12 @@ button:focus-visible {
   .contact-close:hover {
     opacity: 1;
     transform: rotate(90deg);
+  }
+
+  .project-back-to-top:hover {
+    border-color: rgba(244, 242, 237, 0.34);
+    background: rgba(244, 242, 237, 0.13);
+    color: #ffffff;
   }
 }
 

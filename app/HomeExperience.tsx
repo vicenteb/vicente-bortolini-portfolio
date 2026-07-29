@@ -373,12 +373,17 @@ export default function HomeExperience({
                   </button>
                   {selectedWork === index &&
                     (index === 0 ? (
-                      <Link
+                      <button
                         className="awards-link work-project-link"
-                        href="/trabalhos/lojas-renner-app-reposicao"
+                        type="button"
+                        onClick={() =>
+                          router.push(
+                            "/trabalhos/lojas-renner-app-reposicao",
+                          )
+                        }
                       >
                         Visualizar projeto
-                      </Link>
+                      </button>
                     ) : (
                       <button
                         className="awards-link work-project-link"
@@ -424,7 +429,7 @@ export default function HomeExperience({
           id="conteudo"
           aria-labelledby="project-title"
         >
-          <header className="project-intro">
+          <header className="project-intro" id="project-top">
             <h1 id="project-title">Lojas Renner - App Reposição</h1>
             <p className="project-subtitle">Vendas e Estoque em sintonia</p>
             <p className="project-year">2015 / 2026 - AI Redesign</p>
@@ -459,6 +464,19 @@ export default function HomeExperience({
                 priority={index === 0}
               />
             ))}
+          </div>
+
+          <div className="project-footer">
+            <a className="project-back-to-top" href="#project-top">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                focusable="false"
+              >
+                <path d="M12 19V5M6.5 10.5 12 5l5.5 5.5" />
+              </svg>
+              <span>Voltar ao topo</span>
+            </a>
           </div>
         </section>
       ) : (
