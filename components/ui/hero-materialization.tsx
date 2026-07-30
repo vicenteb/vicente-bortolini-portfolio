@@ -1,47 +1,26 @@
 "use client";
 
-import {
-  type ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 
 type HeroMaterializationProps = {
   children: ReactNode;
 };
 
-type Particle = {
-  fromX: number;
-  fromY: number;
+type TextParticle = {
   targetX: number;
   targetY: number;
-  delay: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
   size: number;
-  phase: number;
   color: string;
-  rotation: number;
 };
 
-const animationKey = "hero-materialization-seen";
-const animationDuration = 2050;
-
-const explosiveEase = (value: number) => 1 - (1 - value) ** 3;
-
-const hasSeenAnimation = () => {
-  try {
-    return window.sessionStorage.getItem(animationKey) === "true";
-  } catch {
-    return false;
-  }
-};
-
-const rememberAnimation = () => {
-  try {
-    window.sessionStorage.setItem(animationKey, "true");
-  } catch {
-    // Storage can be unavailable in Safari private or restricted contexts.
-  }
+type PointerState = {
+  x: number;
+  y: number;
+  active: boolean;
 };
 
 export default function HeroMaterialization({
@@ -49,55 +28,103 @@ export default function HeroMaterialization({
 }: HeroMaterializationProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isMaterializing, setIsMaterializing] = useState(true);
 
   useEffect(() => {
+    const heading = headingRef.current;
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext("2d", {
+      alpha: true,
+      willReadFrequently: true,
+    });
+
+    if (!heading || !canvas || !context) return;
+
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const alreadySeen = hasSeenAnimation();
+    if (reducedMotion) return;
 
-    if (reducedMotion || alreadySeen) {
-      const animationFrame = window.requestAnimationFrame(() => {
-        setIsMaterializing(false);
-      });
-
-      return () => window.cancelAnimationFrame(animationFrame);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isMaterializing) return;
-
-    const safetyTimer = window.setTimeout(() => {
-      rememberAnimation();
-      setIsMaterializing(false);
-    }, animationDuration + 1200);
-
-    return () => window.clearTimeout(safetyTimer);
-  }, [isMaterializing]);
-
-  useEffect(() => {
-    if (!isMaterializing) return;
-
-    const heading = headingRef.current;
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
-    if (!heading || !canvas || !context) return;
-
+    const particles: TextParticle[] = [];
+    const pointer: PointerState = { x: -9999, y: -9999, active: false };
+    let width = 0;
+    let height = 0;
+    let pixelRatio = 1;
+    let influence = 0;
     let animationFrame = 0;
     let cancelled = false;
 
-    const start = async () => {
-      await Promise.race([
-        document.fonts.ready,
-        new Promise<void>((resolve) => window.setTimeout(resolve, 1200)),
-      ]);
-      if (cancelled) return;
+    const addTextParticles = (
+      node: Node | null | undefined,
+      element: Element | null,
+      color: string,
+      maskContext: CanvasRenderingContext2D,
+      mask: HTMLCanvasElement,
+      candidates: Array<{ x: number; y: number; color: string }>,
+    ) => {
+      const text = node?.textContent ?? "";
+      if (!node || !element || !text) return;
 
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      maskContext.clearRect(0, 0, width, height);
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      const bounds = range.getBoundingClientRect();
+      const style = window.getComputedStyle(element);
+      const letterSpacing = Number.parseFloat(style.letterSpacing) || 0;
+
+      maskContext.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      maskContext.textBaseline = "alphabetic";
+      maskContext.fillStyle = "#fff";
+
+      const characters = Array.from(text);
+      const characterWidths = characters.map(
+        (character) => maskContext.measureText(character).width,
+      );
+      const metrics = maskContext.measureText(text);
+      const measuredWidth =
+        characterWidths.reduce((total, value) => total + value, 0) +
+        letterSpacing * Math.max(0, characters.length - 1);
+      const scaleX = measuredWidth > 0 ? bounds.width / measuredWidth : 1;
+      const glyphHeight =
+        metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+      const baseline =
+        bounds.top +
+        (bounds.height - glyphHeight) / 2 +
+        metrics.actualBoundingBoxAscent;
+
+      maskContext.save();
+      maskContext.translate(bounds.left, baseline);
+      maskContext.scale(scaleX, 1);
+
+      let cursorX = 0;
+      characters.forEach((character, index) => {
+        maskContext.fillText(character, cursorX, 0);
+        cursorX += characterWidths[index] + letterSpacing;
+      });
+
+      maskContext.restore();
+
+      const imageData = maskContext.getImageData(
+        0,
+        0,
+        mask.width,
+        mask.height,
+      ).data;
+      const sampling = width < 760 ? 5 : 4;
+
+      for (let y = 0; y < height; y += sampling) {
+        for (let x = 0; x < width; x += sampling) {
+          if (imageData[(y * width + x) * 4 + 3] > 96) {
+            candidates.push({ x, y, color });
+          }
+        }
+      }
+    };
+
+    const buildParticles = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+
       canvas.width = Math.round(width * pixelRatio);
       canvas.height = Math.round(height * pixelRatio);
       canvas.style.width = `${width}px`;
@@ -112,232 +139,241 @@ export default function HeroMaterialization({
       });
       if (!maskContext) return;
 
-      const renderTextNode = (node: Node, element: Element) => {
-        const text = node.textContent ?? "";
-        if (!text) return;
-
-        const range = document.createRange();
-        range.selectNodeContents(node);
-        const bounds = range.getBoundingClientRect();
-        const style = window.getComputedStyle(element);
-        const letterSpacing = Number.parseFloat(style.letterSpacing) || 0;
-
-        maskContext.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-        maskContext.textBaseline = "alphabetic";
-        maskContext.fillStyle = "#fff";
-        const characters = Array.from(text);
-        const characterWidths = characters.map(
-          (character) => maskContext.measureText(character).width,
-        );
-        const textMetrics = maskContext.measureText(text);
-        const measuredWidth =
-          characterWidths.reduce((total, width) => total + width, 0) +
-          letterSpacing * Math.max(0, characters.length - 1);
-        const scaleX =
-          measuredWidth > 0 ? bounds.width / measuredWidth : 1;
-        const glyphHeight =
-          textMetrics.actualBoundingBoxAscent +
-          textMetrics.actualBoundingBoxDescent;
-        const baseline =
-          bounds.top +
-          (bounds.height - glyphHeight) / 2 +
-          textMetrics.actualBoundingBoxAscent;
-
-        maskContext.save();
-        maskContext.translate(bounds.left, baseline);
-        maskContext.scale(scaleX, 1);
-
-        let cursorX = 0;
-        characters.forEach((character, index) => {
-          maskContext.fillText(character, cursorX, 0);
-          cursorX += characterWidths[index] + letterSpacing;
-        });
-
-        maskContext.restore();
-      };
-
-      const firstTextNode = heading.firstChild;
+      const candidates: Array<{ x: number; y: number; color: string }> = [];
       const role = heading.querySelector(".role-emphasis");
       const secondLine = heading.querySelector(".hero-line");
 
-      if (firstTextNode) renderTextNode(firstTextNode, heading);
-      if (role?.firstChild) renderTextNode(role.firstChild, role);
-      if (secondLine?.firstChild) {
-        renderTextNode(secondLine.firstChild, secondLine);
-      }
+      addTextParticles(
+        heading.firstChild,
+        heading,
+        "#f4f2ed",
+        maskContext,
+        mask,
+        candidates,
+      );
+      addTextParticles(
+        role?.firstChild,
+        role,
+        "#6754df",
+        maskContext,
+        mask,
+        candidates,
+      );
+      addTextParticles(
+        secondLine?.firstChild,
+        secondLine,
+        "#d4d4d8",
+        maskContext,
+        mask,
+        candidates,
+      );
 
-      const imageData = maskContext.getImageData(0, 0, width, height).data;
-      const candidates: Array<[number, number]> = [];
-      const sampling = 5;
+      const maximumParticles = width < 760 ? 520 : 900;
+      const stride = Math.max(
+        1,
+        Math.ceil(candidates.length / maximumParticles),
+      );
+      const selected = candidates.filter((_, index) => index % stride === 0);
+      const existing = particles.slice();
 
-      for (let y = 0; y < height; y += sampling) {
-        for (let x = 0; x < width; x += sampling) {
-          if (imageData[(y * width + x) * 4 + 3] > 96) {
-            candidates.push([x, y]);
-          }
-        }
-      }
-
-      const maximumParticles = width < 760 ? 420 : 720;
-      const stride = Math.max(1, Math.ceil(candidates.length / maximumParticles));
-      const headingBounds = heading.getBoundingClientRect();
-      const centerX = headingBounds.left + headingBounds.width / 2;
-      const centerY = headingBounds.top + headingBounds.height / 2;
-      const particles: Particle[] = candidates
-        .filter((_, index) => index % stride === 0)
-        .map(([targetX, targetY]) => {
-          const angle = Math.random() * Math.PI * 2;
-          const distance = 2 + Math.random() ** 2 * Math.min(30, width * 0.04);
-
-          return {
-            targetX,
-            targetY,
-            fromX: centerX + Math.cos(angle) * distance,
-            fromY: centerY + Math.sin(angle) * distance,
-            delay: Math.random() * 0.045,
-            size: 0.8 + Math.random() * 1.35,
-            phase: Math.random() * Math.PI * 2,
-            color: Math.random() > 0.82 ? "#ddd8ff" : "#7867e7",
-            rotation:
-              Math.atan2(targetY - centerY, targetX - centerX) + Math.PI / 2,
-          };
+      particles.length = 0;
+      selected.forEach((candidate, index) => {
+        const previous = existing[index];
+        particles.push({
+          targetX: candidate.x,
+          targetY: candidate.y,
+          x: previous?.x ?? candidate.x,
+          y: previous?.y ?? candidate.y,
+          vx: previous?.vx ?? 0,
+          vy: previous?.vy ?? 0,
+          size: 0.85 + Math.random() * 1.15,
+          color: candidate.color,
         });
+      });
+    };
 
-      const startedAt = performance.now();
+    const updatePointer = (clientX: number, clientY: number) => {
+      const bounds = heading.getBoundingClientRect();
+      const padding = Math.min(110, window.innerWidth * 0.1);
+      pointer.x = clientX;
+      pointer.y = clientY;
+      pointer.active =
+        clientX >= bounds.left - padding &&
+        clientX <= bounds.right + padding &&
+        clientY >= bounds.top - padding &&
+        clientY <= bounds.bottom + padding;
+    };
 
-      const draw = (now: number) => {
-        const rawProgress = Math.min(1, (now - startedAt) / animationDuration);
-        context.clearRect(0, 0, width, height);
-        context.globalCompositeOperation = "lighter";
+    const onPointerMove = (event: PointerEvent) => {
+      updatePointer(event.clientX, event.clientY);
+    };
 
-        if (rawProgress < 0.65) {
-          const ignition =
-            rawProgress < 0.18
-              ? rawProgress / 0.18
-              : Math.max(0, 1 - (rawProgress - 0.18) / 0.47);
-          const expansion = explosiveEase(Math.min(1, rawProgress / 0.65));
-          const coreRadius = 14 + expansion * Math.min(125, width * 0.13);
-          const glow = context.createRadialGradient(
-            centerX,
-            centerY,
-            0,
-            centerX,
-            centerY,
-            coreRadius,
-          );
-          glow.addColorStop(0, `rgba(244, 241, 255, ${ignition * 0.94})`);
-          glow.addColorStop(0.2, `rgba(132, 114, 244, ${ignition * 0.58})`);
-          glow.addColorStop(0.62, `rgba(88, 70, 202, ${ignition * 0.24})`);
-          glow.addColorStop(1, "rgba(88, 70, 202, 0)");
-          context.fillStyle = glow;
-          context.fillRect(
-            centerX - coreRadius,
-            centerY - coreRadius,
-            coreRadius * 2,
-            coreRadius * 2,
-          );
+    const onTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (touch) updatePointer(touch.clientX, touch.clientY);
+    };
 
-          if (rawProgress > 0.1) {
-            const waveProgress = Math.min(1, (rawProgress - 0.1) / 0.42);
-            context.globalAlpha = (1 - waveProgress) * 0.36;
-            context.strokeStyle = "#7867e7";
-            context.lineWidth = 1.2;
-            context.beginPath();
-            context.arc(
-              centerX,
-              centerY,
-              18 + waveProgress * Math.min(145, width * 0.16),
-              0,
-              Math.PI * 2,
-            );
-            context.stroke();
-          }
+    const onTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (touch) updatePointer(touch.clientX, touch.clientY);
+    };
+
+    const deactivate = () => {
+      pointer.active = false;
+    };
+
+    const draw = () => {
+      if (cancelled) return;
+
+      context.clearRect(0, 0, width, height);
+      influence = pointer.active
+        ? Math.min(1, influence + 0.085)
+        : Math.max(0, influence - 0.04);
+
+      const interactionRadius = Math.min(150, width * 0.17);
+      const radiusSquared = interactionRadius * interactionRadius;
+      const headingBounds = heading.getBoundingClientRect();
+
+      if (influence > 0.01) {
+        const maskRadius = interactionRadius * (0.35 + influence * 0.65);
+        const maskX = pointer.x - headingBounds.left;
+        const maskY = pointer.y - headingBounds.top;
+        const mask = `radial-gradient(circle ${maskRadius}px at ${maskX}px ${maskY}px, transparent 0%, transparent 56%, #000 100%)`;
+        heading.style.maskImage = mask;
+        heading.style.setProperty("-webkit-mask-image", mask);
+      } else {
+        heading.style.maskImage = "";
+        heading.style.removeProperty("-webkit-mask-image");
+      }
+
+      particles.forEach((particle) => {
+        const dx = particle.x - pointer.x;
+        const dy = particle.y - pointer.y;
+        const distanceSquared = dx * dx + dy * dy;
+        const distance = Math.sqrt(distanceSquared);
+        let activation = 0;
+
+        if (influence > 0.01 && distanceSquared < radiusSquared) {
+          activation =
+            (1 - distance / interactionRadius) ** 2 * influence;
         }
 
-        for (const particle of particles) {
-          const localProgress = Math.min(
-            1,
-            Math.max(
-              0,
-              (rawProgress - 0.08 - particle.delay) /
-                (0.72 - particle.delay),
-            ),
-          );
-          const movement = explosiveEase(localProgress);
-          const x =
-            particle.fromX +
-            (particle.targetX - particle.fromX) * movement;
-          const y =
-            particle.fromY +
-            (particle.targetY - particle.fromY) * movement;
-          const arrivalFade =
-            rawProgress > 0.82 ? 1 - (rawProgress - 0.82) / 0.18 : 1;
-          const alpha =
-            Math.min(1, localProgress * 6) *
-            Math.max(0, arrivalFade) *
-            (0.68 + Math.sin(now * 0.0034 + particle.phase) * 0.12);
-          context.save();
-          context.translate(x, y);
-          context.rotate(particle.rotation);
-          context.globalAlpha = alpha;
-          context.fillStyle = particle.color;
-          context.beginPath();
-          const particleWidth = particle.size * 2;
-          const particleHeight =
-            particle.size * 2 + (1 - movement) * particle.size * 5.5;
-          context.roundRect(
-            -particleWidth / 2,
-            -particleHeight / 2,
-            particleWidth,
-            particleHeight,
-            particle.size,
-          );
-          context.fill();
-          context.restore();
-        }
-        context.globalCompositeOperation = "source-over";
-        context.globalAlpha = 1;
-
-        if (rawProgress < 1 && !cancelled) {
-          animationFrame = window.requestAnimationFrame(draw);
-          return;
+        if (activation > 0.01 && distance > 0.1) {
+          const force = 3.2 * activation;
+          particle.vx += (dx / distance) * force;
+          particle.vy += (dy / distance) * force;
         }
 
-        setIsMaterializing(false);
-        rememberAnimation();
-      };
+        particle.vx += (particle.targetX - particle.x) * 0.055;
+        particle.vy += (particle.targetY - particle.y) * 0.055;
+        particle.vx *= 0.82;
+        particle.vy *= 0.82;
+        particle.x += particle.vx;
+        particle.y += particle.vy;
 
+        const velocity = Math.hypot(particle.vx, particle.vy);
+        const displacement = Math.hypot(
+          particle.x - particle.targetX,
+          particle.y - particle.targetY,
+        );
+        const particleVisibility = Math.min(
+          1,
+          activation * 5 + velocity * 0.16 + displacement * 0.06,
+        );
+
+        if (particleVisibility < 0.025) return;
+
+        const particleWidth = particle.size * 2;
+        const particleHeight =
+          particle.size * 2 + activation * 18;
+        const halfWidth = particleWidth / 2;
+        const halfHeight = particleHeight / 2;
+        const cornerRadius = Math.min(halfWidth, halfHeight);
+        const rotation =
+          velocity > 0.2
+            ? Math.atan2(particle.vy, particle.vx) + Math.PI / 2
+            : 0;
+
+        context.save();
+        context.translate(particle.x, particle.y);
+        context.rotate(rotation);
+        context.globalAlpha = particleVisibility;
+        context.fillStyle = particle.color;
+
+        if (activation > 0.28) {
+          context.shadowBlur = 6 + activation * 13;
+          context.shadowColor = particle.color;
+        }
+
+        context.beginPath();
+        context.roundRect(
+          -halfWidth,
+          -halfHeight,
+          particleWidth,
+          particleHeight,
+          cornerRadius,
+        );
+        context.fill();
+        context.restore();
+      });
+
+      canvas.style.opacity = "1";
+      heading.style.opacity = "1";
       animationFrame = window.requestAnimationFrame(draw);
     };
 
+    const start = async () => {
+      await Promise.race([
+        document.fonts.ready,
+        new Promise<void>((resolve) => window.setTimeout(resolve, 1200)),
+      ]);
+      if (cancelled) return;
+      buildParticles();
+      animationFrame = window.requestAnimationFrame(draw);
+    };
+
+    const resizeObserver = new ResizeObserver(buildParticles);
+    resizeObserver.observe(heading);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerleave", deactivate);
+    window.addEventListener("pointercancel", deactivate);
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", deactivate);
+    window.addEventListener("touchcancel", deactivate);
     start().catch(() => {
-      if (!cancelled) {
-        setIsMaterializing(false);
-      }
+      heading.style.opacity = "1";
+      canvas.style.opacity = "0";
     });
 
     return () => {
       cancelled = true;
       window.cancelAnimationFrame(animationFrame);
+      resizeObserver.disconnect();
+      heading.style.opacity = "";
+      heading.style.maskImage = "";
+      heading.style.removeProperty("-webkit-mask-image");
+      canvas.style.opacity = "";
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerleave", deactivate);
+      window.removeEventListener("pointercancel", deactivate);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", deactivate);
+      window.removeEventListener("touchcancel", deactivate);
     };
-  }, [isMaterializing]);
+  }, []);
 
   return (
     <>
-      <h1
-        ref={headingRef}
-        id="home-title"
-        className={isMaterializing ? "is-materializing" : undefined}
-      >
+      <h1 ref={headingRef} id="home-title">
         {children}
       </h1>
-      {isMaterializing && (
-        <canvas
-          ref={canvasRef}
-          className="hero-materialization-canvas"
-          aria-hidden="true"
-        />
-      )}
+      <canvas
+        ref={canvasRef}
+        className="hero-materialization-canvas"
+        aria-hidden="true"
+      />
     </>
   );
 }
