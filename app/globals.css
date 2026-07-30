@@ -1136,6 +1136,12 @@ button:focus-visible {
   cursor: text;
 }
 
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
 .contact-label {
   font-weight: 100;
 }
@@ -1147,6 +1153,62 @@ button:focus-visible {
 .contact-details ::selection {
   background: rgba(88, 70, 202, 0.75);
   color: #ffffff;
+}
+
+.contact-copy {
+  display: grid;
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0;
+  border: 1px solid rgba(244, 242, 237, 0.18);
+  border-radius: 50%;
+  background: transparent;
+  color: #e7e5e1;
+  cursor: pointer;
+  opacity: 0.72;
+  place-items: center;
+  transition:
+    border-color 180ms ease,
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.contact-copy svg {
+  width: 0.88rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.contact-copy:focus-visible {
+  border-color: rgba(244, 242, 237, 0.65);
+  border-radius: 50%;
+  opacity: 1;
+}
+
+.contact-verification {
+  position: absolute;
+  bottom: 0.45rem;
+  left: 50%;
+  display: none;
+  min-height: 2rem;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--muted);
+  font-family: "Roboto", sans-serif;
+  font-size: 0.7rem;
+  transform: translateX(-50%);
+}
+
+.contact-verification.is-visible {
+  display: flex;
+}
+
+.contact-verification p {
+  margin: 0;
+  white-space: nowrap;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1161,6 +1223,12 @@ button:focus-visible {
   .edge-link:hover {
     color: #ffffff;
     opacity: 1;
+  }
+
+  .contact-copy:hover {
+    border-color: rgba(244, 242, 237, 0.5);
+    opacity: 1;
+    transform: translateY(-1px);
   }
 
   .full-name:hover,
@@ -1443,9 +1511,15 @@ button:focus-visible {
   }
 
   .contact-details {
+    flex-direction: column;
     gap: clamp(1.25rem, 5vw, 2rem);
     font-size: clamp(0.7rem, 3.3vw, 0.8rem);
     letter-spacing: 0;
+  }
+
+  .contact-verification {
+    bottom: 0.3rem;
+    font-size: 0.62rem;
   }
 }
 

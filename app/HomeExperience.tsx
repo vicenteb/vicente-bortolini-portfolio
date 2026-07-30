@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { createElement, useEffect, useRef, useState } from "react";
 import InteractiveStarfield from "@/components/ui/interactive-starfield";
 import SkeletonImage from "@/components/ui/skeleton-image";
 
@@ -39,6 +39,14 @@ type HomeExperienceProps = {
     | "panvelSelfCheckoutProject"
     | "panvelOmniPedidosProject"
     | "panvelOmniPdvProject";
+};
+
+type ContactData = { phone: string; email: string };
+type ContactField = keyof ContactData;
+
+type AltchaWidget = HTMLElement & {
+  reset: () => void;
+  verify: () => Promise<unknown>;
 };
 
 const selectedWorks = [
@@ -234,11 +242,15 @@ export default function HomeExperience({
   const [isLeavingAbout, setIsLeavingAbout] = useState(false);
   const [isLeavingWorks, setIsLeavingWorks] = useState(false);
   const [selectedWork, setSelectedWork] = useState(0);
+  const [contactData, setContactData] = useState<ContactData | null>(null);
+  const [pendingContact, setPendingContact] = useState<ContactField | null>(null);
+  const [contactFeedback, setContactFeedback] = useState("");
   const contactTriggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const awardsTriggerRef = useRef<HTMLButtonElement>(null);
   const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
   const projectContentRef = useRef<HTMLElement>(null);
+  const altchaWidgetRef = useRef<AltchaWidget | null>(null);
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
   const isProject =
@@ -260,6 +272,102 @@ export default function HomeExperience({
             : initialView === "panvelOmniPdvProject"
               ? projectDetails.panvelOmniPdvProject
               : projectDetails.rennerProject;
+
+  useEffect(() => {
+    const savedContact = window.sessionStorage.getItem("verified-contact");
+
+    if (savedContact) {
+      try {
+        setContactData(JSON.parse(savedContact) as ContactData);
+      } catch {
+        window.sessionStorage.removeItem("verified-contact");
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!pendingContact) {
+      return;
+    }
+
+    let active = true;
+    let widget: AltchaWidget | null = null;
+
+    const onStateChange = async (event: Event) => {
+      const detail = (
+        event as CustomEvent<{ state?: string; payload?: string }>
+      ).detail;
+
+      if (detail?.state === "verifying") {
+        setContactFeedback("Verificando…");
+      }
+
+      if (detail?.state === "error") {
+        setContactFeedback("Não foi possível verificar. Tente novamente.");
+      }
+
+      if (detail?.state === "verified" && detail.payload) {
+        try {
+          const response = await fetch("/api/contact/unlock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ payload: detail.payload }),
+          });
+          const result = (await response.json()) as {
+            success?: boolean;
+            contact?: ContactData;
+          };
+
+          if (!response.ok || !result.success || !result.contact) {
+            throw new Error("Verification failed");
+          }
+
+          setContactData(result.contact);
+          window.sessionStorage.setItem(
+            "verified-contact",
+            JSON.stringify(result.contact),
+          );
+          await navigator.clipboard.writeText(result.contact[pendingContact]);
+          setContactFeedback(
+            pendingContact === "email"
+              ? "E-mail copiado"
+              : "WhatsApp copiado",
+          );
+          setPendingContact(null);
+        } catch {
+          setContactFeedback("Não foi possível verificar. Tente novamente.");
+          widget?.reset();
+        }
+      }
+    };
+
+    Promise.all([import("altcha"), import("altcha/i18n/pt-br")]).then(() => {
+      if (!active || !altchaWidgetRef.current) return;
+      widget = altchaWidgetRef.current;
+      widget.addEventListener("statechange", onStateChange);
+      widget.verify();
+    });
+
+    return () => {
+      active = false;
+      widget?.removeEventListener("statechange", onStateChange);
+    };
+  }, [pendingContact]);
+
+  const copyContact = async (field: ContactField) => {
+    setContactFeedback("");
+
+    if (!contactData) {
+      setPendingContact(field);
+      setContactFeedback("Confirme que você é humano para continuar.");
+      return;
+    }
+
+    await navigator.clipboard.writeText(contactData[field]);
+    setContactFeedback(
+      field === "email" ? "E-mail copiado" : "WhatsApp copiado",
+    );
+  };
 
   useEffect(() => {
     router.prefetch("/");
@@ -745,14 +853,68 @@ export default function HomeExperience({
           </button>
 
           <div className="contact-details">
-            <p>
-              <span className="contact-label">WhatsApp:</span>{" "}
-              <span className="contact-value">51982306185</span>
-            </p>
-            <p>
-              <span className="contact-label">E-mail:</span>{" "}
-              <span className="contact-value">vicenteb@gmail.com</span>
-            </p>
+            <div className="contact-item">
+              <p>
+                <span className="contact-label">WhatsApp:</span>{" "}
+                <span className="contact-value">
+                  {contactData?.phone ?? "(51) •••••-••••"}
+                </span>
+              </p>
+              <button
+                className="contact-copy"
+                type="button"
+                aria-label="Copiar WhatsApp"
+                onClick={() => copyContact("phone")}
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <rect x="8" y="8" width="11" height="11" rx="2" />
+                  <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+                </svg>
+              </button>
+            </div>
+            <div className="contact-item">
+              <p>
+                <span className="contact-label">E-mail:</span>{" "}
+                <span className="contact-value">
+                  {contactData?.email ?? "vi••••••@gmail.com"}
+                </span>
+              </p>
+              <button
+                className="contact-copy"
+                type="button"
+                aria-label="Copiar e-mail"
+                onClick={() => copyContact("email")}
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <rect x="8" y="8" width="11" height="11" rx="2" />
+                  <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={`contact-verification${
+              pendingContact ? " is-visible" : ""
+            }`}
+          >
+            {createElement("altcha-widget", {
+              ref: (node: AltchaWidget | null) => {
+                altchaWidgetRef.current = node;
+              },
+              challenge: "/api/contact/challenge",
+              auto: "off",
+              display: "standard",
+              language: "pt-br",
+              type: "checkbox",
+              configuration: JSON.stringify({
+                hideFooter: true,
+                hideLogo: true,
+                minDuration: 600,
+                workers: 2,
+              }),
+            })}
+            <p aria-live="polite">{contactFeedback}</p>
           </div>
         </section>
       </div>
