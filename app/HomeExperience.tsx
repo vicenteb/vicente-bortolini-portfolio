@@ -36,7 +36,8 @@ type HomeExperienceProps = {
     | "rennerProject"
     | "sicrediProject"
     | "panvelPdvMovelProject"
-    | "panvelSelfCheckoutProject";
+    | "panvelSelfCheckoutProject"
+    | "panvelOmniPedidosProject";
 };
 
 const selectedWorks = [
@@ -63,7 +64,7 @@ const selectedWorks = [
   {
     title: "PanVel - App omniPedidos",
     image: "/panvel-omni-pedidos.jpg",
-    projectHref: null,
+    projectHref: "/trabalhos/panvel-app-omni-pedidos",
   },
   {
     title: "PanVel - omniPDV",
@@ -130,6 +131,19 @@ const panvelSelfCheckoutProjectImages = Array.from(
   }),
 );
 
+const panvelOmniPedidosProjectImages = [
+  { src: "/panvel-omni-pedidos-case-01.jpg", width: 1001, height: 1572 },
+  { src: "/panvel-omni-pedidos-case-02.jpg", width: 1001, height: 1572 },
+  { src: "/panvel-omni-pedidos-case-03.jpg", width: 1001, height: 1572 },
+  { src: "/panvel-omni-pedidos-case-04.jpg", width: 1001, height: 1572 },
+  { src: "/panvel-omni-pedidos-case-05.jpg", width: 1000, height: 1573 },
+  { src: "/panvel-omni-pedidos-case-06.jpg", width: 1001, height: 1572 },
+  { src: "/panvel-omni-pedidos-case-07.jpg", width: 1000, height: 1573 },
+  { src: "/panvel-omni-pedidos-case-08.jpg", width: 1001, height: 1572 },
+  { src: "/panvel-omni-pedidos-case-09.jpg", width: 1001, height: 1572 },
+  { src: "/panvel-omni-pedidos-case-10.jpg", width: 1001, height: 1572 },
+];
+
 const projectDetails = {
   rennerProject: {
     title: "Lojas Renner - App Reposição",
@@ -168,6 +182,15 @@ const projectDetails = {
     images: panvelSelfCheckoutProjectImages,
     imageAlt: "PanVel Self-checkout",
   },
+  panvelOmniPedidosProject: {
+    title: "PanVel - App omniPedidos",
+    subtitle: "App mobile para a separação e retirada de pedidos online",
+    year: "2022 a 2025",
+    description:
+      "O App Clique e Retire - omniPedidos foi desenvolvido para digitalizar e otimizar o processo de separação e retirada de pedidos online nas lojas PanVel, eliminando a necessidade de impressão de papel e fortalecendo iniciativas ESG da companhia. A solução reduziu mais de 1 milhão de impressões anuais relacionadas ao processo, além de aumentar a eficiência operacional das equipes de loja por meio de uma jornada totalmente digital, com atualização de pedidos em tempo real, controle de status e gestão integrada da operação. O projeto nasceu no PanVel Labs como uma iniciativa de inovação e transformação digital no varejo farmacêutico, envolvendo discovery, prototipação, validação em lojas piloto e evolução contínua da experiência do usuário, sempre com foco em omnichannel, produtividade operacional e melhoria da experiência dos colaboradores e clientes.",
+    images: panvelOmniPedidosProjectImages,
+    imageAlt: "PanVel App omniPedidos",
+  },
 };
 
 const awards = [
@@ -203,7 +226,8 @@ export default function HomeExperience({
     initialView === "rennerProject" ||
     initialView === "sicrediProject" ||
     initialView === "panvelPdvMovelProject" ||
-    initialView === "panvelSelfCheckoutProject";
+    initialView === "panvelSelfCheckoutProject" ||
+    initialView === "panvelOmniPedidosProject";
   const activeProject =
     initialView === "sicrediProject"
       ? projectDetails.sicrediProject
@@ -211,6 +235,8 @@ export default function HomeExperience({
         ? projectDetails.panvelPdvMovelProject
         : initialView === "panvelSelfCheckoutProject"
           ? projectDetails.panvelSelfCheckoutProject
+          : initialView === "panvelOmniPedidosProject"
+            ? projectDetails.panvelOmniPedidosProject
         : projectDetails.rennerProject;
 
   useEffect(() => {
@@ -221,6 +247,7 @@ export default function HomeExperience({
     router.prefetch("/trabalhos/sicredi-portabilidade-multifundos");
     router.prefetch("/trabalhos/panvel-pdv-movel");
     router.prefetch("/trabalhos/panvel-self-checkout");
+    router.prefetch("/trabalhos/panvel-app-omni-pedidos");
   }, [router]);
 
   useEffect(() => {
