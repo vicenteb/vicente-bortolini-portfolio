@@ -37,7 +37,8 @@ type HomeExperienceProps = {
     | "sicrediProject"
     | "panvelPdvMovelProject"
     | "panvelSelfCheckoutProject"
-    | "panvelOmniPedidosProject";
+    | "panvelOmniPedidosProject"
+    | "panvelOmniPdvProject";
 };
 
 const selectedWorks = [
@@ -69,7 +70,7 @@ const selectedWorks = [
   {
     title: "PanVel - omniPDV",
     image: "/panvel-omni-pdv.jpg",
-    projectHref: null,
+    projectHref: "/trabalhos/panvel-omnipdv",
   },
 ];
 
@@ -144,6 +145,15 @@ const panvelOmniPedidosProjectImages = [
   { src: "/panvel-omni-pedidos-case-10.jpg", width: 1001, height: 1572 },
 ];
 
+const panvelOmniPdvProjectImages = Array.from(
+  { length: 15 },
+  (_, index) => ({
+    src: `/panvel-omnipdv-case-${String(index + 1).padStart(2, "0")}.png`,
+    width: 1106,
+    height: 1420,
+  }),
+);
+
 const projectDetails = {
   rennerProject: {
     title: "Lojas Renner - App Reposição",
@@ -191,6 +201,15 @@ const projectDetails = {
     images: panvelOmniPedidosProjectImages,
     imageAlt: "PanVel App omniPedidos",
   },
+  panvelOmniPdvProject: {
+    title: "PanVel - omniPDV",
+    subtitle: "Sistema de ponto de venda omnichannel do Grupo PanVel",
+    year: "2016 a 2025",
+    description:
+      "Realizei a concepção, criação e evolução do omniPDV, novo sistema de ponto de venda (POS) do Grupo PanVel integrado ao ecossistema omniPharma. A solução foi projetada para web e tablets com foco em otimizar processos de venda, busca e transação de produtos, medicamentos e serviços nas lojas físicas. Com foco em experiência do usuário, omnichannel e eficiência operacional, o omniPDV contribuiu para aumentar a produtividade dos operadores de loja, padronizar fluxos de atendimento e melhorar a jornada de compra dos clientes no varejo farmacêutico.",
+    images: panvelOmniPdvProjectImages,
+    imageAlt: "PanVel omniPDV",
+  },
 };
 
 const awards = [
@@ -227,7 +246,8 @@ export default function HomeExperience({
     initialView === "sicrediProject" ||
     initialView === "panvelPdvMovelProject" ||
     initialView === "panvelSelfCheckoutProject" ||
-    initialView === "panvelOmniPedidosProject";
+    initialView === "panvelOmniPedidosProject" ||
+    initialView === "panvelOmniPdvProject";
   const activeProject =
     initialView === "sicrediProject"
       ? projectDetails.sicrediProject
@@ -237,7 +257,9 @@ export default function HomeExperience({
           ? projectDetails.panvelSelfCheckoutProject
           : initialView === "panvelOmniPedidosProject"
             ? projectDetails.panvelOmniPedidosProject
-        : projectDetails.rennerProject;
+            : initialView === "panvelOmniPdvProject"
+              ? projectDetails.panvelOmniPdvProject
+              : projectDetails.rennerProject;
 
   useEffect(() => {
     router.prefetch("/");
@@ -248,6 +270,7 @@ export default function HomeExperience({
     router.prefetch("/trabalhos/panvel-pdv-movel");
     router.prefetch("/trabalhos/panvel-self-checkout");
     router.prefetch("/trabalhos/panvel-app-omni-pedidos");
+    router.prefetch("/trabalhos/panvel-omnipdv");
   }, [router]);
 
   useEffect(() => {
