@@ -24,7 +24,7 @@ type Particle = {
 };
 
 const animationKey = "hero-materialization-seen";
-const animationDuration = 1850;
+const animationDuration = 2050;
 
 const explosiveEase = (value: number) => 1 - (1 - value) ** 3;
 
@@ -164,13 +164,13 @@ export default function HeroMaterialization({
         context.clearRect(0, 0, width, height);
         context.globalCompositeOperation = "lighter";
 
-        if (rawProgress < 0.58) {
+        if (rawProgress < 0.65) {
           const ignition =
-            rawProgress < 0.15
-              ? rawProgress / 0.15
-              : Math.max(0, 1 - (rawProgress - 0.15) / 0.43);
-          const expansion = explosiveEase(Math.min(1, rawProgress / 0.58));
-          const coreRadius = 12 + expansion * Math.min(105, width * 0.11);
+            rawProgress < 0.18
+              ? rawProgress / 0.18
+              : Math.max(0, 1 - (rawProgress - 0.18) / 0.47);
+          const expansion = explosiveEase(Math.min(1, rawProgress / 0.65));
+          const coreRadius = 14 + expansion * Math.min(125, width * 0.13);
           const glow = context.createRadialGradient(
             centerX,
             centerY,
@@ -179,9 +179,9 @@ export default function HeroMaterialization({
             centerY,
             coreRadius,
           );
-          glow.addColorStop(0, `rgba(238, 234, 255, ${ignition * 0.82})`);
-          glow.addColorStop(0.18, `rgba(120, 103, 231, ${ignition * 0.48})`);
-          glow.addColorStop(0.58, `rgba(88, 70, 202, ${ignition * 0.18})`);
+          glow.addColorStop(0, `rgba(244, 241, 255, ${ignition * 0.94})`);
+          glow.addColorStop(0.2, `rgba(132, 114, 244, ${ignition * 0.58})`);
+          glow.addColorStop(0.62, `rgba(88, 70, 202, ${ignition * 0.24})`);
           glow.addColorStop(1, "rgba(88, 70, 202, 0)");
           context.fillStyle = glow;
           context.fillRect(
@@ -193,7 +193,7 @@ export default function HeroMaterialization({
 
           if (rawProgress > 0.1) {
             const waveProgress = Math.min(1, (rawProgress - 0.1) / 0.42);
-            context.globalAlpha = (1 - waveProgress) * 0.3;
+            context.globalAlpha = (1 - waveProgress) * 0.36;
             context.strokeStyle = "#7867e7";
             context.lineWidth = 1.2;
             context.beginPath();
