@@ -246,12 +246,16 @@ export default function HomeExperience({
   const [contactData, setContactData] = useState<ContactData | null>(null);
   const [pendingContact, setPendingContact] = useState<ContactField | null>(null);
   const [contactFeedback, setContactFeedback] = useState("");
+  const [contactToast, setContactToast] = useState("");
   const contactTriggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const awardsTriggerRef = useRef<HTMLButtonElement>(null);
   const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
   const projectContentRef = useRef<HTMLElement>(null);
   const altchaWidgetRef = useRef<AltchaWidget | null>(null);
+  const contactToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
   const isProject =
@@ -285,6 +289,27 @@ export default function HomeExperience({
       }
     }
   }, []);
+
+  const showContactToast = (message: string) => {
+    if (contactToastTimerRef.current) {
+      clearTimeout(contactToastTimerRef.current);
+    }
+
+    setContactToast(message);
+    contactToastTimerRef.current = setTimeout(() => {
+      setContactToast("");
+      contactToastTimerRef.current = null;
+    }, 2400);
+  };
+
+  useEffect(
+    () => () => {
+      if (contactToastTimerRef.current) {
+        clearTimeout(contactToastTimerRef.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     let active = true;
@@ -327,11 +352,12 @@ export default function HomeExperience({
 
           if (pendingContact) {
             await navigator.clipboard.writeText(result.contact[pendingContact]);
-            setContactFeedback(
+            showContactToast(
               pendingContact === "email"
-                ? "E-mail copiado"
-                : "WhatsApp copiado",
+                ? "E-mail copiado com sucesso."
+                : "Telefone copiado com sucesso.",
             );
+            setContactFeedback("");
           } else {
             setContactFeedback("Contatos liberados");
           }
@@ -366,8 +392,10 @@ export default function HomeExperience({
     }
 
     await navigator.clipboard.writeText(contactData[field]);
-    setContactFeedback(
-      field === "email" ? "E-mail copiado" : "WhatsApp copiado",
+    showContactToast(
+      field === "email"
+        ? "E-mail copiado com sucesso."
+        : "Telefone copiado com sucesso.",
     );
   };
 
@@ -823,6 +851,17 @@ export default function HomeExperience({
           </section>
         </div>
       )}
+
+      <div
+        className={`contact-toast${contactToast ? " is-visible" : ""}`}
+        role="status"
+        aria-live="polite"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="m5 12 4 4L19 6" />
+        </svg>
+        <span>{contactToast}</span>
+      </div>
 
       <div
         className={`contact-overlay${isContactOpen ? " is-open" : ""}`}

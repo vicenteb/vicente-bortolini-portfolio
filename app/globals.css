@@ -1093,9 +1093,9 @@ button:focus-visible {
   transition:
     transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
     opacity 360ms ease,
-    min-height 480ms cubic-bezier(0.22, 1, 0.36, 1),
-    padding 480ms cubic-bezier(0.22, 1, 0.36, 1),
-    row-gap 480ms cubic-bezier(0.22, 1, 0.36, 1);
+    min-height 720ms cubic-bezier(0.25, 0.8, 0.25, 1),
+    padding 720ms cubic-bezier(0.25, 0.8, 0.25, 1),
+    row-gap 720ms cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .contact-drawer.has-verification {
@@ -1261,6 +1261,54 @@ button:focus-visible {
   line-height: 1.35;
   text-align: center;
   white-space: normal;
+}
+
+.contact-toast {
+  position: fixed;
+  z-index: 120;
+  top: max(1.35rem, env(safe-area-inset-top));
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  max-width: calc(100vw - 2rem);
+  padding: 0.72rem 1rem;
+  border: 1px solid rgba(134, 118, 232, 0.38);
+  border-radius: 999px;
+  background: rgba(13, 14, 22, 0.94);
+  box-shadow:
+    0 0.7rem 2rem rgba(0, 0, 0, 0.28),
+    0 0 1.5rem rgba(88, 70, 202, 0.12);
+  color: #f4f2ed;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 300;
+  letter-spacing: 0.015em;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -0.8rem) scale(0.98);
+  transition:
+    opacity 240ms ease,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contact-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.contact-toast svg {
+  width: 1rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: #8e7ee8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.contact-toast span {
+  white-space: nowrap;
 }
 
 @media (hover: hover) and (pointer: fine) {
