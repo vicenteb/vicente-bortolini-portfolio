@@ -247,6 +247,7 @@ export default function HomeExperience({
   const [pendingContact, setPendingContact] = useState<ContactField | null>(null);
   const [contactFeedback, setContactFeedback] = useState("");
   const [contactToast, setContactToast] = useState("");
+  const [isContactToastVisible, setIsContactToastVisible] = useState(false);
   const contactTriggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const awardsTriggerRef = useRef<HTMLButtonElement>(null);
@@ -256,6 +257,9 @@ export default function HomeExperience({
   const contactToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  const contactToastCleanupTimerRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
   const isProject =
@@ -295,10 +299,20 @@ export default function HomeExperience({
       clearTimeout(contactToastTimerRef.current);
     }
 
+    if (contactToastCleanupTimerRef.current) {
+      clearTimeout(contactToastCleanupTimerRef.current);
+    }
+
     setContactToast(message);
+    setIsContactToastVisible(true);
     contactToastTimerRef.current = setTimeout(() => {
-      setContactToast("");
+      setIsContactToastVisible(false);
       contactToastTimerRef.current = null;
+
+      contactToastCleanupTimerRef.current = setTimeout(() => {
+        setContactToast("");
+        contactToastCleanupTimerRef.current = null;
+      }, 380);
     }, 2400);
   };
 
@@ -306,6 +320,10 @@ export default function HomeExperience({
     () => () => {
       if (contactToastTimerRef.current) {
         clearTimeout(contactToastTimerRef.current);
+      }
+
+      if (contactToastCleanupTimerRef.current) {
+        clearTimeout(contactToastCleanupTimerRef.current);
       }
     },
     [],
@@ -853,7 +871,9 @@ export default function HomeExperience({
       )}
 
       <div
-        className={`contact-toast${contactToast ? " is-visible" : ""}`}
+        className={`contact-toast${
+          isContactToastVisible ? " is-visible" : ""
+        }`}
         role="status"
         aria-live="polite"
       >
