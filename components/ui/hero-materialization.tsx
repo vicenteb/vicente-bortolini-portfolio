@@ -82,43 +82,59 @@ export default function HeroMaterialization({
       });
       if (!maskContext) return;
 
-      const renderTextNode = (element: Element, text: string) => {
+      const renderTextNode = (node: Node, element: Element) => {
+        const text = node.textContent ?? "";
+        if (!text) return;
+
         const range = document.createRange();
-        const node = element.firstChild;
-        if (!node) return;
         range.selectNodeContents(node);
         const bounds = range.getBoundingClientRect();
         const style = window.getComputedStyle(element);
-        const fontSize = Number.parseFloat(style.fontSize);
+        const letterSpacing = Number.parseFloat(style.letterSpacing) || 0;
 
         maskContext.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
         maskContext.textBaseline = "alphabetic";
         maskContext.fillStyle = "#fff";
-        maskContext.fillText(text, bounds.left, bounds.bottom - fontSize * 0.13);
+        const characters = Array.from(text);
+        const characterWidths = characters.map(
+          (character) => maskContext.measureText(character).width,
+        );
+        const textMetrics = maskContext.measureText(text);
+        const measuredWidth =
+          characterWidths.reduce((total, width) => total + width, 0) +
+          letterSpacing * Math.max(0, characters.length - 1);
+        const scaleX =
+          measuredWidth > 0 ? bounds.width / measuredWidth : 1;
+        const glyphHeight =
+          textMetrics.actualBoundingBoxAscent +
+          textMetrics.actualBoundingBoxDescent;
+        const baseline =
+          bounds.top +
+          (bounds.height - glyphHeight) / 2 +
+          textMetrics.actualBoundingBoxAscent;
+
+        maskContext.save();
+        maskContext.translate(bounds.left, baseline);
+        maskContext.scale(scaleX, 1);
+
+        let cursorX = 0;
+        characters.forEach((character, index) => {
+          maskContext.fillText(character, cursorX, 0);
+          cursorX += characterWidths[index] + letterSpacing;
+        });
+
+        maskContext.restore();
       };
 
       const firstTextNode = heading.firstChild;
       const role = heading.querySelector(".role-emphasis");
       const secondLine = heading.querySelector(".hero-line");
 
-      if (firstTextNode?.textContent) {
-        const range = document.createRange();
-        range.selectNode(firstTextNode);
-        const bounds = range.getBoundingClientRect();
-        const style = window.getComputedStyle(heading);
-        const fontSize = Number.parseFloat(style.fontSize);
-        maskContext.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-        maskContext.textBaseline = "alphabetic";
-        maskContext.fillStyle = "#fff";
-        maskContext.fillText(
-          firstTextNode.textContent,
-          bounds.left,
-          bounds.bottom - fontSize * 0.13,
-        );
+      if (firstTextNode) renderTextNode(firstTextNode, heading);
+      if (role?.firstChild) renderTextNode(role.firstChild, role);
+      if (secondLine?.firstChild) {
+        renderTextNode(secondLine.firstChild, secondLine);
       }
-
-      if (role?.textContent) renderTextNode(role, role.textContent);
-      if (secondLine?.textContent) renderTextNode(secondLine, secondLine.textContent);
 
       const imageData = maskContext.getImageData(0, 0, width, height).data;
       const candidates: Array<[number, number]> = [];
