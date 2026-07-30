@@ -28,6 +28,22 @@ const animationDuration = 2050;
 
 const explosiveEase = (value: number) => 1 - (1 - value) ** 3;
 
+const hasSeenAnimation = () => {
+  try {
+    return window.sessionStorage.getItem(animationKey) === "true";
+  } catch {
+    return false;
+  }
+};
+
+const rememberAnimation = () => {
+  try {
+    window.sessionStorage.setItem(animationKey, "true");
+  } catch {
+    // Storage can be unavailable in Safari private or restricted contexts.
+  }
+};
+
 export default function HeroMaterialization({
   children,
 }: HeroMaterializationProps) {
@@ -39,7 +55,7 @@ export default function HeroMaterialization({
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const alreadySeen = window.sessionStorage.getItem(animationKey) === "true";
+    const alreadySeen = hasSeenAnimation();
 
     if (reducedMotion || alreadySeen) {
       const animationFrame = window.requestAnimationFrame(() => {
@@ -53,6 +69,17 @@ export default function HeroMaterialization({
   useEffect(() => {
     if (!isMaterializing) return;
 
+    const safetyTimer = window.setTimeout(() => {
+      rememberAnimation();
+      setIsMaterializing(false);
+    }, animationDuration + 1200);
+
+    return () => window.clearTimeout(safetyTimer);
+  }, [isMaterializing]);
+
+  useEffect(() => {
+    if (!isMaterializing) return;
+
     const heading = headingRef.current;
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
@@ -62,7 +89,10 @@ export default function HeroMaterialization({
     let cancelled = false;
 
     const start = async () => {
-      await document.fonts.ready;
+      await Promise.race([
+        document.fonts.ready,
+        new Promise<void>((resolve) => window.setTimeout(resolve, 1200)),
+      ]);
       if (cancelled) return;
 
       const width = window.innerWidth;
@@ -273,14 +303,18 @@ export default function HeroMaterialization({
           return;
         }
 
-        window.sessionStorage.setItem(animationKey, "true");
         setIsMaterializing(false);
+        rememberAnimation();
       };
 
       animationFrame = window.requestAnimationFrame(draw);
     };
 
-    start();
+    start().catch(() => {
+      if (!cancelled) {
+        setIsMaterializing(false);
+      }
+    });
 
     return () => {
       cancelled = true;
