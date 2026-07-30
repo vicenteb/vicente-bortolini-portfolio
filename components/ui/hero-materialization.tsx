@@ -23,9 +23,12 @@ type Particle = {
 };
 
 const animationKey = "hero-materialization-seen";
-const animationDuration = 1800;
+const animationDuration = 2200;
 
-const easeOutQuint = (value: number) => 1 - (1 - value) ** 5;
+const smoothArrival = (value: number) =>
+  value < 0.5
+    ? 4 * value ** 3
+    : 1 - (-2 * value + 2) ** 3 / 2;
 
 export default function HeroMaterialization({
   children,
@@ -152,8 +155,8 @@ export default function HeroMaterialization({
               headingBounds.top +
               headingBounds.height / 2 +
               Math.sin(angle) * distance,
-            delay: Math.random() * 0.22,
-            size: 0.7 + Math.random() * 1.3,
+            delay: Math.random() * 0.14,
+            size: 0.8 + Math.random() * 1.35,
             phase: Math.random() * Math.PI * 2,
             color: Math.random() > 0.82 ? "#ddd8ff" : "#7867e7",
           };
@@ -170,7 +173,7 @@ export default function HeroMaterialization({
             1,
             Math.max(0, (rawProgress - particle.delay) / (1 - particle.delay)),
           );
-          const movement = easeOutQuint(localProgress);
+          const movement = smoothArrival(localProgress);
           const x =
             particle.fromX +
             (particle.targetX - particle.fromX) * movement;
@@ -178,11 +181,11 @@ export default function HeroMaterialization({
             particle.fromY +
             (particle.targetY - particle.fromY) * movement;
           const arrivalFade =
-            localProgress > 0.72 ? 1 - (localProgress - 0.72) / 0.28 : 1;
+            localProgress > 0.8 ? 1 - (localProgress - 0.8) / 0.2 : 1;
           const alpha =
             Math.min(1, localProgress * 4) *
             Math.max(0, arrivalFade) *
-            (0.54 + Math.sin(now * 0.004 + particle.phase) * 0.18);
+            (0.62 + Math.sin(now * 0.0034 + particle.phase) * 0.14);
           context.save();
           context.translate(x, y);
           context.rotate(
@@ -196,11 +199,14 @@ export default function HeroMaterialization({
           context.shadowBlur = 7;
           context.shadowColor = particle.color;
           context.beginPath();
+          const particleWidth = particle.size * 2;
+          const particleHeight =
+            particle.size * 2 + (1 - movement) * particle.size * 5.5;
           context.roundRect(
-            -particle.size / 2,
-            -particle.size * 2.2,
-            particle.size,
-            particle.size * 4.4,
+            -particleWidth / 2,
+            -particleHeight / 2,
+            particleWidth,
+            particleHeight,
             particle.size,
           );
           context.fill();
