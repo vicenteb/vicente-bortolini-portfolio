@@ -74,6 +74,12 @@ export default function InteractiveStarfield({
       "(prefers-reduced-motion: reduce)",
     ).matches;
     const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    const tabletTouch = window.matchMedia(
+      "(min-width: 761px) and (pointer: coarse)",
+    ).matches;
+
+    if (tabletTouch) return;
+
     const radius = interactionRadius * (coarsePointer ? 1.28 : 1);
     const spring = 0.022 + speed * 0.068;
     const damping = 0.9 - speed * 0.13;

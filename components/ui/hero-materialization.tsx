@@ -55,9 +55,12 @@ export default function HeroMaterialization({
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const tabletTouch = window.matchMedia(
+      "(min-width: 761px) and (pointer: coarse)",
+    ).matches;
     const alreadySeen = hasSeenAnimation();
 
-    if (reducedMotion || alreadySeen) {
+    if (reducedMotion || tabletTouch || alreadySeen) {
       const animationFrame = window.requestAnimationFrame(() => {
         setIsMaterializing(false);
       });
@@ -79,6 +82,11 @@ export default function HeroMaterialization({
 
   useEffect(() => {
     if (!isMaterializing) return;
+    if (
+      window.matchMedia("(min-width: 761px) and (pointer: coarse)").matches
+    ) {
+      return;
+    }
 
     const heading = headingRef.current;
     const canvas = canvasRef.current;
