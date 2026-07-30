@@ -24,12 +24,9 @@ type Particle = {
 };
 
 const animationKey = "hero-materialization-seen";
-const animationDuration = 1750;
+const animationDuration = 1850;
 
-const smoothArrival = (value: number) =>
-  value < 0.5
-    ? 4 * value ** 3
-    : 1 - (-2 * value + 2) ** 3 / 2;
+const explosiveEase = (value: number) => 1 - (1 - value) ** 3;
 
 export default function HeroMaterialization({
   children,
@@ -138,20 +135,20 @@ export default function HeroMaterialization({
       const maximumParticles = width < 760 ? 420 : 720;
       const stride = Math.max(1, Math.ceil(candidates.length / maximumParticles));
       const headingBounds = heading.getBoundingClientRect();
+      const centerX = headingBounds.left + headingBounds.width / 2;
+      const centerY = headingBounds.top + headingBounds.height / 2;
       const particles: Particle[] = candidates
         .filter((_, index) => index % stride === 0)
         .map(([targetX, targetY]) => {
           const angle = Math.random() * Math.PI * 2;
-          const distance = 5 + Math.random() ** 1.8 * Math.min(72, width * 0.08);
-          const centerX = headingBounds.left + headingBounds.width / 2;
-          const centerY = headingBounds.top + headingBounds.height / 2;
+          const distance = 2 + Math.random() ** 2 * Math.min(30, width * 0.04);
 
           return {
             targetX,
             targetY,
             fromX: centerX + Math.cos(angle) * distance,
             fromY: centerY + Math.sin(angle) * distance,
-            delay: Math.random() * 0.08,
+            delay: Math.random() * 0.045,
             size: 0.8 + Math.random() * 1.35,
             phase: Math.random() * Math.PI * 2,
             color: Math.random() > 0.82 ? "#ddd8ff" : "#7867e7",
@@ -165,14 +162,62 @@ export default function HeroMaterialization({
       const draw = (now: number) => {
         const rawProgress = Math.min(1, (now - startedAt) / animationDuration);
         context.clearRect(0, 0, width, height);
+        context.globalCompositeOperation = "lighter";
+
+        if (rawProgress < 0.58) {
+          const ignition =
+            rawProgress < 0.15
+              ? rawProgress / 0.15
+              : Math.max(0, 1 - (rawProgress - 0.15) / 0.43);
+          const expansion = explosiveEase(Math.min(1, rawProgress / 0.58));
+          const coreRadius = 12 + expansion * Math.min(105, width * 0.11);
+          const glow = context.createRadialGradient(
+            centerX,
+            centerY,
+            0,
+            centerX,
+            centerY,
+            coreRadius,
+          );
+          glow.addColorStop(0, `rgba(238, 234, 255, ${ignition * 0.82})`);
+          glow.addColorStop(0.18, `rgba(120, 103, 231, ${ignition * 0.48})`);
+          glow.addColorStop(0.58, `rgba(88, 70, 202, ${ignition * 0.18})`);
+          glow.addColorStop(1, "rgba(88, 70, 202, 0)");
+          context.fillStyle = glow;
+          context.fillRect(
+            centerX - coreRadius,
+            centerY - coreRadius,
+            coreRadius * 2,
+            coreRadius * 2,
+          );
+
+          if (rawProgress > 0.1) {
+            const waveProgress = Math.min(1, (rawProgress - 0.1) / 0.42);
+            context.globalAlpha = (1 - waveProgress) * 0.3;
+            context.strokeStyle = "#7867e7";
+            context.lineWidth = 1.2;
+            context.beginPath();
+            context.arc(
+              centerX,
+              centerY,
+              18 + waveProgress * Math.min(145, width * 0.16),
+              0,
+              Math.PI * 2,
+            );
+            context.stroke();
+          }
+        }
 
         for (const particle of particles) {
           const localProgress = Math.min(
             1,
-            Math.max(0, (rawProgress - particle.delay) / (1 - particle.delay)),
+            Math.max(
+              0,
+              (rawProgress - 0.08 - particle.delay) /
+                (0.72 - particle.delay),
+            ),
           );
-          const formationProgress = Math.min(1, localProgress / 0.72);
-          const movement = smoothArrival(formationProgress);
+          const movement = explosiveEase(localProgress);
           const x =
             particle.fromX +
             (particle.targetX - particle.fromX) * movement;
@@ -180,7 +225,7 @@ export default function HeroMaterialization({
             particle.fromY +
             (particle.targetY - particle.fromY) * movement;
           const arrivalFade =
-            localProgress > 0.82 ? 1 - (localProgress - 0.82) / 0.18 : 1;
+            rawProgress > 0.82 ? 1 - (rawProgress - 0.82) / 0.18 : 1;
           const alpha =
             Math.min(1, localProgress * 6) *
             Math.max(0, arrivalFade) *
@@ -204,6 +249,8 @@ export default function HeroMaterialization({
           context.fill();
           context.restore();
         }
+        context.globalCompositeOperation = "source-over";
+        context.globalAlpha = 1;
 
         if (rawProgress < 1 && !cancelled) {
           animationFrame = window.requestAnimationFrame(draw);

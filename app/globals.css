@@ -282,7 +282,7 @@ a {
 }
 
 .home-hero h1.is-materializing {
-  animation: hero-text-materialize 1.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: hero-text-materialize 1.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero-materialization-canvas {
@@ -301,7 +301,7 @@ a {
     transform: scale(0.99);
   }
 
-  60% {
+  64% {
     opacity: 0;
     filter: blur(8px);
   }
