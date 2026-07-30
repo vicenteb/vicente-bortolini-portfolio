@@ -402,6 +402,17 @@ export default function HomeExperience({
           setContactFeedback("");
 
           if (requestedContact) {
+            const usesTouchInput = window.matchMedia(
+              "(pointer: coarse)",
+            ).matches;
+
+            if (usesTouchInput) {
+              showContactToast(
+                "Verificação concluída. Toque novamente para copiar.",
+              );
+              return;
+            }
+
             const copied = await copyText(result.contact[requestedContact]);
 
             showContactToast(
