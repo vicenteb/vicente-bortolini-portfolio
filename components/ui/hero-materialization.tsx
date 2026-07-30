@@ -23,7 +23,7 @@ type Particle = {
 };
 
 const animationKey = "hero-materialization-seen";
-const animationDuration = 2200;
+const animationDuration = 2400;
 
 const smoothArrival = (value: number) =>
   value < 0.5
@@ -124,7 +124,7 @@ export default function HeroMaterialization({
 
       const imageData = maskContext.getImageData(0, 0, width, height).data;
       const candidates: Array<[number, number]> = [];
-      const sampling = width < 760 ? 5 : 6;
+      const sampling = 4;
 
       for (let y = 0; y < height; y += sampling) {
         for (let x = 0; x < width; x += sampling) {
@@ -134,28 +134,23 @@ export default function HeroMaterialization({
         }
       }
 
-      const maximumParticles = width < 760 ? 520 : 900;
+      const maximumParticles = width < 760 ? 850 : 1500;
       const stride = Math.max(1, Math.ceil(candidates.length / maximumParticles));
       const headingBounds = heading.getBoundingClientRect();
       const particles: Particle[] = candidates
         .filter((_, index) => index % stride === 0)
         .map(([targetX, targetY]) => {
           const angle = Math.random() * Math.PI * 2;
-          const distance =
-            Math.max(width, height) * (0.18 + Math.random() * 0.5);
+          const distance = 5 + Math.random() ** 1.8 * Math.min(72, width * 0.08);
+          const centerX = headingBounds.left + headingBounds.width / 2;
+          const centerY = headingBounds.top + headingBounds.height / 2;
 
           return {
             targetX,
             targetY,
-            fromX:
-              headingBounds.left +
-              headingBounds.width / 2 +
-              Math.cos(angle) * distance,
-            fromY:
-              headingBounds.top +
-              headingBounds.height / 2 +
-              Math.sin(angle) * distance,
-            delay: Math.random() * 0.14,
+            fromX: centerX + Math.cos(angle) * distance,
+            fromY: centerY + Math.sin(angle) * distance,
+            delay: Math.random() * 0.08,
             size: 0.8 + Math.random() * 1.35,
             phase: Math.random() * Math.PI * 2,
             color: Math.random() > 0.82 ? "#ddd8ff" : "#7867e7",
@@ -173,7 +168,8 @@ export default function HeroMaterialization({
             1,
             Math.max(0, (rawProgress - particle.delay) / (1 - particle.delay)),
           );
-          const movement = smoothArrival(localProgress);
+          const formationProgress = Math.min(1, localProgress / 0.72);
+          const movement = smoothArrival(formationProgress);
           const x =
             particle.fromX +
             (particle.targetX - particle.fromX) * movement;
@@ -181,11 +177,11 @@ export default function HeroMaterialization({
             particle.fromY +
             (particle.targetY - particle.fromY) * movement;
           const arrivalFade =
-            localProgress > 0.8 ? 1 - (localProgress - 0.8) / 0.2 : 1;
+            localProgress > 0.82 ? 1 - (localProgress - 0.82) / 0.18 : 1;
           const alpha =
-            Math.min(1, localProgress * 4) *
+            Math.min(1, localProgress * 6) *
             Math.max(0, arrivalFade) *
-            (0.62 + Math.sin(now * 0.0034 + particle.phase) * 0.14);
+            (0.68 + Math.sin(now * 0.0034 + particle.phase) * 0.12);
           context.save();
           context.translate(x, y);
           context.rotate(

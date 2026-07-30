@@ -282,7 +282,7 @@ a {
 }
 
 .home-hero h1.is-materializing {
-  animation: hero-text-materialize 2.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: hero-text-materialize 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero-materialization-canvas {
@@ -301,19 +301,19 @@ a {
     transform: scale(0.99);
   }
 
-  30% {
-    opacity: 0.04;
-    filter: blur(12px);
+  60% {
+    opacity: 0;
+    filter: blur(8px);
   }
 
-  58% {
-    opacity: 0.36;
-    filter: blur(6px);
+  72% {
+    opacity: 0.14;
+    filter: blur(4px);
   }
 
-  80% {
-    opacity: 0.82;
-    filter: blur(1.5px);
+  86% {
+    opacity: 0.68;
+    filter: blur(1px);
   }
 
   100% {
