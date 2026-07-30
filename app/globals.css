@@ -1080,7 +1080,8 @@ button:focus-visible {
   position: relative;
   display: grid;
   width: 100%;
-  min-height: clamp(9.5rem, 18vh, 11.5rem);
+  height: clamp(9.5rem, 18vh, 11.5rem);
+  overflow: hidden;
   place-items: center;
   padding: 3.8rem clamp(1.5rem, 5vw, 5rem) 2rem;
   border-top: 1px solid rgba(244, 242, 237, 0.12);
@@ -1093,13 +1094,13 @@ button:focus-visible {
   transition:
     transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
     opacity 360ms ease,
-    min-height 720ms cubic-bezier(0.25, 0.8, 0.25, 1),
+    height 720ms cubic-bezier(0.25, 0.8, 0.25, 1),
     padding 720ms cubic-bezier(0.25, 0.8, 0.25, 1),
     row-gap 720ms cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .contact-drawer.has-verification {
-  min-height: 16rem;
+  height: 16rem;
   grid-template-rows: auto auto;
   align-content: center;
   row-gap: 1.15rem;
@@ -1610,7 +1611,7 @@ button:focus-visible {
 
   .contact-drawer {
     display: flex;
-    min-height: 10rem;
+    height: 10rem;
     flex-direction: column;
     justify-content: center;
     gap: 0;
@@ -1621,7 +1622,7 @@ button:focus-visible {
   }
 
   .contact-drawer.has-verification {
-    min-height: 19rem;
+    height: 19rem;
     gap: 1.5rem;
     padding-bottom: 1.4rem;
   }
@@ -1685,7 +1686,7 @@ button:focus-visible {
 
 @media (min-width: 761px) and (max-width: 1366px) and (pointer: coarse) {
   .contact-drawer.has-verification {
-    min-height: 16rem;
+    height: 16rem;
     grid-template-rows: auto auto;
     align-content: center;
     row-gap: 1.35rem;

@@ -744,12 +744,12 @@ export default function HomeExperience({
                   </button>
                   {selectedWork === index &&
                     (work.projectHref ? (
-                      <a
+                      <Link
                         className="awards-link work-project-link"
                         href={work.projectHref}
                       >
                         Visualizar projeto
-                      </a>
+                      </Link>
                     ) : (
                       <button
                         className="awards-link work-project-link"
