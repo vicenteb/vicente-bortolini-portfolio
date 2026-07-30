@@ -834,7 +834,9 @@ export default function HomeExperience({
         }}
       >
         <section
-          className="contact-drawer"
+          className={`contact-drawer${
+            pendingContact ? " has-verification" : ""
+          }`}
           id="contact-drawer"
           role="dialog"
           aria-modal="true"
