@@ -45,6 +45,35 @@ type HomeExperienceProps = {
 type ContactData = { phone: string; email: string };
 type ContactField = keyof ContactData;
 
+const copyText = async (value: string) => {
+  try {
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch {
+    try {
+      const textarea = document.createElement("textarea");
+      const previouslyFocused = document.activeElement as HTMLElement | null;
+
+      textarea.value = value;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.inset = "0 auto auto -9999px";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, value.length);
+
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      previouslyFocused?.focus({ preventScroll: true });
+      return copied;
+    } catch {
+      return false;
+    }
+  }
+};
+
 type AltchaWidget = HTMLElement & {
   reset: () => void;
   verify: () => Promise<unknown>;
@@ -368,19 +397,21 @@ export default function HomeExperience({
             JSON.stringify(result.contact),
           );
 
-          if (pendingContact) {
-            await navigator.clipboard.writeText(result.contact[pendingContact]);
-            showContactToast(
-              pendingContact === "email"
-                ? "E-mail copiado com sucesso."
-                : "Telefone copiado com sucesso.",
-            );
-            setContactFeedback("");
-          } else {
-            setContactFeedback("Contatos liberados");
-          }
-
+          const requestedContact = pendingContact;
           setPendingContact(null);
+          setContactFeedback("");
+
+          if (requestedContact) {
+            const copied = await copyText(result.contact[requestedContact]);
+
+            showContactToast(
+              copied
+                ? requestedContact === "email"
+                  ? "E-mail copiado com sucesso."
+                  : "Telefone copiado com sucesso."
+                : "Não foi possível copiar. Tente novamente.",
+            );
+          }
         } catch {
           setContactFeedback("Não foi possível verificar. Tente novamente.");
           widget?.reset();
@@ -409,11 +440,13 @@ export default function HomeExperience({
       return;
     }
 
-    await navigator.clipboard.writeText(contactData[field]);
+    const copied = await copyText(contactData[field]);
     showContactToast(
-      field === "email"
-        ? "E-mail copiado com sucesso."
-        : "Telefone copiado com sucesso.",
+      copied
+        ? field === "email"
+          ? "E-mail copiado com sucesso."
+          : "Telefone copiado com sucesso."
+        : "Não foi possível copiar. Tente novamente.",
     );
   };
 
