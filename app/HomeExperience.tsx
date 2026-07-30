@@ -287,10 +287,6 @@ export default function HomeExperience({
   }, []);
 
   useEffect(() => {
-    if (!pendingContact) {
-      return;
-    }
-
     let active = true;
     let widget: AltchaWidget | null = null;
 
@@ -328,12 +324,18 @@ export default function HomeExperience({
             "verified-contact",
             JSON.stringify(result.contact),
           );
-          await navigator.clipboard.writeText(result.contact[pendingContact]);
-          setContactFeedback(
-            pendingContact === "email"
-              ? "E-mail copiado"
-              : "WhatsApp copiado",
-          );
+
+          if (pendingContact) {
+            await navigator.clipboard.writeText(result.contact[pendingContact]);
+            setContactFeedback(
+              pendingContact === "email"
+                ? "E-mail copiado"
+                : "WhatsApp copiado",
+            );
+          } else {
+            setContactFeedback("Contatos liberados");
+          }
+
           setPendingContact(null);
         } catch {
           setContactFeedback("Não foi possível verificar. Tente novamente.");
@@ -346,7 +348,6 @@ export default function HomeExperience({
       if (!active || !altchaWidgetRef.current) return;
       widget = altchaWidgetRef.current;
       widget.addEventListener("statechange", onStateChange);
-      widget.verify();
     });
 
     return () => {
@@ -899,22 +900,24 @@ export default function HomeExperience({
               pendingContact ? " is-visible" : ""
             }`}
           >
-            {createElement("altcha-widget", {
-              ref: (node: AltchaWidget | null) => {
-                altchaWidgetRef.current = node;
-              },
-              challenge: "/api/contact/challenge",
-              auto: "off",
-              display: "standard",
-              language: "pt-br",
-              type: "checkbox",
-              configuration: JSON.stringify({
-                hideFooter: true,
-                hideLogo: true,
-                minDuration: 600,
-                workers: 2,
-              }),
-            })}
+            {pendingContact
+              ? createElement("altcha-widget", {
+                  ref: (node: AltchaWidget | null) => {
+                    altchaWidgetRef.current = node;
+                  },
+                  challenge: "/api/contact/challenge",
+                  auto: "off",
+                  display: "standard",
+                  language: "pt-br",
+                  type: "checkbox",
+                  configuration: JSON.stringify({
+                    hideFooter: true,
+                    hideLogo: true,
+                    minDuration: 600,
+                    workers: 2,
+                  }),
+                })
+              : null}
             <p aria-live="polite">{contactFeedback}</p>
           </div>
         </section>

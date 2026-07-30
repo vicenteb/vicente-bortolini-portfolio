@@ -1534,8 +1534,12 @@ button:focus-visible {
   }
 
   .contact-drawer {
-    min-height: 10rem;
-    padding: 3.7rem 1rem 1.85rem;
+    display: flex;
+    min-height: 19rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 3.7rem 1rem 1.4rem;
     border-top: 0;
     background: #0b0d13;
     box-shadow: none;
@@ -1558,8 +1562,28 @@ button:focus-visible {
   }
 
   .contact-verification {
-    bottom: 0.3rem;
+    position: static;
+    left: auto;
+    width: min(100%, 20rem);
+    min-height: 0;
+    flex-direction: column;
+    gap: 0.55rem;
     font-size: 0.62rem;
+    transform: none;
+  }
+
+  .contact-verification altcha-widget {
+    width: 100%;
+    max-width: 100%;
+    --altcha-max-width: 100%;
+  }
+
+  .contact-verification p {
+    min-height: 0.9rem;
+    padding: 0 0.5rem;
+    line-height: 1.35;
+    text-align: center;
+    white-space: normal;
   }
 }
 
@@ -1582,6 +1606,29 @@ button:focus-visible {
 }
 
 @media (min-width: 761px) and (max-width: 1366px) and (pointer: coarse) {
+  .contact-drawer {
+    min-height: 16rem;
+    grid-template-rows: auto auto;
+    align-content: center;
+    row-gap: 1.35rem;
+    padding-bottom: 1.4rem;
+  }
+
+  .contact-verification {
+    position: static;
+    left: auto;
+    min-height: 0;
+    flex-direction: column;
+    gap: 0.5rem;
+    transform: none;
+  }
+
+  .contact-verification p {
+    line-height: 1.35;
+    text-align: center;
+    white-space: normal;
+  }
+
   .works-content {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
