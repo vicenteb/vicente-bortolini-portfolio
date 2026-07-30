@@ -20,10 +20,11 @@ type Particle = {
   size: number;
   phase: number;
   color: string;
+  rotation: number;
 };
 
 const animationKey = "hero-materialization-seen";
-const animationDuration = 2400;
+const animationDuration = 1750;
 
 const smoothArrival = (value: number) =>
   value < 0.5
@@ -69,7 +70,7 @@ export default function HeroMaterialization({
 
       const width = window.innerWidth;
       const height = window.innerHeight;
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = Math.round(width * pixelRatio);
       canvas.height = Math.round(height * pixelRatio);
       canvas.style.width = `${width}px`;
@@ -124,7 +125,7 @@ export default function HeroMaterialization({
 
       const imageData = maskContext.getImageData(0, 0, width, height).data;
       const candidates: Array<[number, number]> = [];
-      const sampling = 4;
+      const sampling = 5;
 
       for (let y = 0; y < height; y += sampling) {
         for (let x = 0; x < width; x += sampling) {
@@ -134,7 +135,7 @@ export default function HeroMaterialization({
         }
       }
 
-      const maximumParticles = width < 760 ? 850 : 1500;
+      const maximumParticles = width < 760 ? 420 : 720;
       const stride = Math.max(1, Math.ceil(candidates.length / maximumParticles));
       const headingBounds = heading.getBoundingClientRect();
       const particles: Particle[] = candidates
@@ -154,6 +155,8 @@ export default function HeroMaterialization({
             size: 0.8 + Math.random() * 1.35,
             phase: Math.random() * Math.PI * 2,
             color: Math.random() > 0.82 ? "#ddd8ff" : "#7867e7",
+            rotation:
+              Math.atan2(targetY - centerY, targetX - centerX) + Math.PI / 2,
           };
         });
 
@@ -184,16 +187,9 @@ export default function HeroMaterialization({
             (0.68 + Math.sin(now * 0.0034 + particle.phase) * 0.12);
           context.save();
           context.translate(x, y);
-          context.rotate(
-            Math.atan2(
-              particle.targetY - particle.fromY,
-              particle.targetX - particle.fromX,
-            ) + Math.PI / 2,
-          );
+          context.rotate(particle.rotation);
           context.globalAlpha = alpha;
           context.fillStyle = particle.color;
-          context.shadowBlur = 7;
-          context.shadowColor = particle.color;
           context.beginPath();
           const particleWidth = particle.size * 2;
           const particleHeight =
