@@ -281,6 +281,39 @@ a {
   font: inherit;
 }
 
+.home-hero h1.is-materializing {
+  animation: hero-text-materialize 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-materialization-canvas {
+  position: fixed;
+  z-index: 3;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+@keyframes hero-text-materialize {
+  0%,
+  42% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: scale(0.985);
+  }
+
+  72% {
+    opacity: 0.62;
+    filter: blur(3px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
 .works-screen {
   background: var(--background);
 }
@@ -1677,6 +1710,17 @@ button:focus-visible {
 
   .interactive-starfield {
     opacity: 0.72;
+  }
+
+  .home-hero h1.is-materializing {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    animation: none;
+  }
+
+  .hero-materialization-canvas {
+    display: none;
   }
 
   .contact-overlay,

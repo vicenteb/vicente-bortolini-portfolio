@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createElement, useEffect, useRef, useState } from "react";
+import HeroMaterialization from "@/components/ui/hero-materialization";
 import InteractiveStarfield from "@/components/ui/interactive-starfield";
 import SkeletonImage from "@/components/ui/skeleton-image";
 
@@ -757,10 +758,10 @@ export default function HomeExperience({
         </section>
       ) : (
         <section className="home-hero" id="conteudo" aria-labelledby="home-title">
-          <h1 id="home-title">
+          <HeroMaterialization>
             Olá, sou <strong className="role-emphasis">Product Designer</strong>
             <span className="hero-line">com foco em UX/UI design</span>
-          </h1>
+          </HeroMaterialization>
         </section>
       )}
 
