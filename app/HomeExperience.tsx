@@ -586,7 +586,13 @@ export default function HomeExperience({
             }
           }}
         >
-          Vicente Bortolini
+          <img
+            className="full-name-logo"
+            src="/logo-vb.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>Vicente Bortolini</span>
         </Link>
 
         <nav className="social-links" aria-label="Redes sociais">

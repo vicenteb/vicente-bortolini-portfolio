@@ -164,8 +164,22 @@ a {
 }
 
 .full-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.78rem;
   font-size: 0.86rem;
   font-weight: 600;
+}
+
+.full-name-logo {
+  display: block;
+  width: 1.42rem;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.full-name > span {
+  display: block;
 }
 
 .full-name,
@@ -1395,7 +1409,12 @@ button:focus-visible {
   }
 
   .full-name {
+    gap: 0.6rem;
     font-size: 0.72rem;
+  }
+
+  .full-name-logo {
+    width: 1.16rem;
   }
 
   .social-links {
