@@ -263,12 +263,19 @@ const awards = [
   { date: "Nov de 2004", title: "Prêmio Detran-RS Publicidade pela Vida - 6ª Edição", issuer: "PUCRS", association: "PUCRS", associationLabel: "Associado a" },
 ];
 
+const education = [
+  { date: "2012 - 2013", institution: "ESPM", course: "Pós-graduação / Especialização - Marketing Digital", image: "/education-espm.jpg" },
+  { date: "2006 - 2006", institution: "UNISINOS", course: "Ensino Técnico - Produção Gráfica", image: "/education-unisinos.jpg" },
+  { date: "2001 - 2004", institution: "PUCRS", course: "Bacharelado - Publicidade e Propaganda", image: "/education-pucrs.jpg" },
+];
+
 export default function HomeExperience({
   initialView = "home",
 }: HomeExperienceProps) {
   const router = useRouter();
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isAwardsOpen, setIsAwardsOpen] = useState(false);
+  const [isStudiesOpen, setIsStudiesOpen] = useState(false);
   const [isLeavingAbout, setIsLeavingAbout] = useState(false);
   const [isLeavingWorks, setIsLeavingWorks] = useState(false);
   const [selectedWork, setSelectedWork] = useState(0);
@@ -281,6 +288,8 @@ export default function HomeExperience({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const awardsTriggerRef = useRef<HTMLButtonElement>(null);
   const awardsCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const studiesTriggerRef = useRef<HTMLButtonElement>(null);
+  const studiesCloseButtonRef = useRef<HTMLButtonElement>(null);
   const projectContentRef = useRef<HTMLElement>(null);
   const altchaWidgetRef = useRef<AltchaWidget | null>(null);
   const contactToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -528,6 +537,31 @@ export default function HomeExperience({
     };
   }, [isAwardsOpen]);
 
+  useEffect(() => {
+    if (!isStudiesOpen) return;
+
+    const studiesTrigger = studiesTriggerRef.current;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsStudiesOpen(false);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const supportsPrecisePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+
+    if (supportsPrecisePointer) {
+      studiesCloseButtonRef.current?.focus({ preventScroll: true });
+    }
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      if (supportsPrecisePointer) {
+        studiesTrigger?.focus({ preventScroll: true });
+      }
+    };
+  }, [isStudiesOpen]);
+
   return (
     <main
       className={`home-screen${isAbout ? " about-screen" : ""}${
@@ -535,7 +569,7 @@ export default function HomeExperience({
       }${isProject ? " project-screen" : ""}${
         isLeavingAbout ? " is-leaving-about" : ""
       }${isLeavingWorks ? " is-leaving-works" : ""}${
-        isAwardsOpen ? " is-awards-open" : ""
+        isAwardsOpen || isStudiesOpen ? " is-awards-open" : ""
       }`}
       id="inicio"
     >
@@ -700,18 +734,32 @@ export default function HomeExperience({
               Design Ops | Agile / Scrum | Figma | Experiência em varejo e
               e-commerce | Fintech &amp; Financial
             </p>
-            <button
-              ref={awardsTriggerRef}
-              className="awards-link"
-              id="premiacoes"
-              type="button"
-              aria-haspopup="dialog"
-              aria-expanded={isAwardsOpen}
-              aria-controls="awards-drawer"
-              onClick={() => setIsAwardsOpen(true)}
-            >
-              Premiações / Reconhecimentos
-            </button>
+            <div className="about-drawer-links">
+              <button
+                ref={awardsTriggerRef}
+                className="awards-link"
+                id="premiacoes"
+                type="button"
+                aria-haspopup="dialog"
+                aria-expanded={isAwardsOpen}
+                aria-controls="awards-drawer"
+                onClick={() => setIsAwardsOpen(true)}
+              >
+                Premiações / Reconhecimentos
+              </button>
+              <button
+                ref={studiesTriggerRef}
+                className="awards-link studies-link"
+                id="estudos"
+                type="button"
+                aria-haspopup="dialog"
+                aria-expanded={isStudiesOpen}
+                aria-controls="studies-drawer"
+                onClick={() => setIsStudiesOpen(true)}
+              >
+                Estudos / Formações
+              </button>
+            </div>
           </div>
         </section>
       ) : isWorks ? (
@@ -915,6 +963,65 @@ export default function HomeExperience({
               >
                 Ver mais detalhes
               </a>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {isAbout && (
+        <div
+          className={`awards-overlay studies-overlay${isStudiesOpen ? " is-open" : ""}`}
+          aria-hidden={!isStudiesOpen}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setIsStudiesOpen(false);
+            }
+          }}
+        >
+          <section
+            className="awards-drawer studies-drawer"
+            id="studies-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="studies-title"
+          >
+            <header className="awards-header">
+              <h2 className="awards-title" id="studies-title">
+                Estudos / Formações
+              </h2>
+              <button
+                ref={studiesCloseButtonRef}
+                className="contact-close awards-close"
+                type="button"
+                aria-label="Fechar estudos e formações"
+                onClick={() => setIsStudiesOpen(false)}
+              >
+                <span aria-hidden="true" />
+              </button>
+            </header>
+
+            <div className="awards-list studies-list">
+              {education.map((item) => (
+                <article className="study-item" key={item.institution}>
+                  <SkeletonImage
+                    containerClassName="study-image"
+                    src={item.image}
+                    alt={`Marca da ${item.institution}`}
+                    fill
+                    sizes="6rem"
+                  />
+                  <div className="study-copy">
+                    <time>{item.date}</time>
+                    <p className="study-institution">{item.institution}</p>
+                    <h3>{item.course}</h3>
+                  </div>
+                </article>
+              ))}
+              <article className="study-item study-language">
+                <div className="study-copy">
+                  <h3>Inglês avançado</h3>
+                </div>
+              </article>
             </div>
           </section>
         </div>

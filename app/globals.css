@@ -824,6 +824,19 @@ a {
   line-height: 1.7;
 }
 
+.about-drawer-links {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.studies-link {
+  margin-left: auto;
+  text-align: right;
+}
+
 .awards-link {
   position: relative;
   display: inline-block;
@@ -997,6 +1010,76 @@ a {
 
 .awards-details-link {
   margin: 1.5rem 0 1.8rem;
+}
+
+.studies-list {
+  padding-right: clamp(0.8rem, 1.3vw, 1.3rem);
+}
+
+.study-item {
+  display: grid;
+  grid-template-columns: 5.8rem minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.25rem, 2vw, 1.8rem);
+  padding: clamp(1.25rem, 2.4vh, 1.75rem) 0;
+  border-bottom: 1px solid rgba(244, 242, 237, 0.075);
+  color: rgba(244, 242, 237, 0.72);
+  font-family: "Roboto", sans-serif;
+}
+
+.study-image {
+  position: relative;
+  width: 5.8rem;
+  height: 5.8rem;
+  overflow: hidden;
+  border: 1px solid rgba(244, 242, 237, 0.2);
+  border-radius: 0.4rem;
+  background: rgba(244, 242, 237, 0.035);
+}
+
+.study-image img {
+  object-fit: cover;
+}
+
+.study-copy {
+  display: flex;
+  min-width: 0;
+  min-height: 5.8rem;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.study-copy time {
+  margin-bottom: 0.45rem;
+  color: rgba(244, 242, 237, 0.43);
+  font-size: clamp(0.66rem, 0.72vw, 0.76rem);
+  font-weight: 300;
+  letter-spacing: 0.055em;
+}
+
+.study-institution {
+  margin: 0 0 0.35rem;
+  color: rgba(244, 242, 237, 0.77);
+  font-size: clamp(0.72rem, 0.8vw, 0.82rem);
+  font-weight: 400;
+  letter-spacing: 0.075em;
+}
+
+.study-copy h3 {
+  margin: 0;
+  color: rgba(244, 242, 237, 0.95);
+  font-size: clamp(0.82rem, 0.9vw, 0.94rem);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.study-language {
+  grid-template-columns: 1fr;
+  border-bottom: 0;
+}
+
+.study-language .study-copy {
+  min-height: 2.6rem;
 }
 
 @keyframes about-slide-in {
@@ -1593,6 +1676,53 @@ button:focus-visible {
     font-size: 0.79rem;
   }
 
+  .about-drawer-links {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .about-drawer-links .awards-link {
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+
+  .about-drawer-links .awards-link:first-child {
+    justify-self: start;
+    text-align: left;
+  }
+
+  .about-drawer-links .studies-link {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .study-item {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 1.3rem 0;
+  }
+
+  .study-image {
+    display: none;
+  }
+
+  .study-copy {
+    min-height: 0;
+  }
+
+  .study-copy time {
+    font-size: 0.67rem;
+  }
+
+  .study-institution {
+    font-size: 0.72rem;
+  }
+
+  .study-copy h3 {
+    font-size: 0.82rem;
+  }
+
   .edge-link-left {
     left: 0.75rem;
   }
@@ -1722,6 +1852,28 @@ button:focus-visible {
 
   .about-screen.is-awards-open .awards-list {
     overscroll-behavior: contain;
+  }
+
+  .study-item {
+    grid-template-columns: 5.8rem minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 1.8rem);
+    padding: clamp(1.25rem, 2.2vh, 1.65rem) 0;
+  }
+
+  .study-image {
+    display: block;
+  }
+
+  .study-copy {
+    min-height: 5.8rem;
+  }
+
+  .study-language {
+    grid-template-columns: 1fr;
+  }
+
+  .study-language .study-copy {
+    min-height: 2.6rem;
   }
 
   .about-photo,
