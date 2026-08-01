@@ -1398,6 +1398,15 @@ button:focus-visible {
     min-height: 32rem;
   }
 
+  .about-screen.is-awards-open {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  .about-screen.is-awards-open .awards-list {
+    overscroll-behavior: contain;
+  }
+
   .home-header {
     padding: 1.5rem 1.35rem;
   }
@@ -1706,6 +1715,32 @@ button:focus-visible {
 }
 
 @media (min-width: 761px) and (max-width: 1366px) and (pointer: coarse) {
+  .about-screen.is-awards-open {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  .about-screen.is-awards-open .awards-list {
+    overscroll-behavior: contain;
+  }
+
+  .about-photo,
+  .about-copy {
+    transition:
+      opacity 260ms ease,
+      visibility 0s linear 0s;
+  }
+
+  .about-screen.is-awards-open .about-photo,
+  .about-screen.is-awards-open .about-copy {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition:
+      opacity 180ms ease,
+      visibility 0s linear 180ms;
+  }
+
   .contact-drawer.has-verification {
     height: 16rem;
     grid-template-rows: auto auto;
@@ -1799,7 +1834,23 @@ button:focus-visible {
       100svh - clamp(7.4rem, 13vh, 9.5rem) - clamp(5.5rem, 9vh, 7rem)
     );
     min-height: 30rem;
+    padding: clamp(1.6rem, 2.8vw, 2.25rem)
+      clamp(1.75rem, 3.4vw, 2.75rem) clamp(1.5rem, 2.6vw, 2rem);
     background: var(--background);
+  }
+
+  .about-screen .awards-header {
+    min-height: 2.5rem;
+    align-items: center;
+    padding: 0 3.25rem 1.15rem 0;
+  }
+
+  .about-screen .awards-title {
+    line-height: 2rem;
+  }
+
+  .about-screen .contact-close.awards-close {
+    right: 0;
   }
 }
 
