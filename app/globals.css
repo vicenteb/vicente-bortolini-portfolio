@@ -1698,17 +1698,27 @@ button:focus-visible {
   }
 
   .study-item {
-    grid-template-columns: 1fr;
-    gap: 0;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: 1rem;
     padding: 1.3rem 0;
   }
 
   .study-image {
-    display: none;
+    display: block;
+    width: 4.5rem;
+    height: 4.5rem;
   }
 
   .study-copy {
-    min-height: 0;
+    min-height: 4.5rem;
+  }
+
+  .study-language {
+    grid-template-columns: 1fr;
+  }
+
+  .study-language .study-copy {
+    min-height: 2.6rem;
   }
 
   .study-copy time {
