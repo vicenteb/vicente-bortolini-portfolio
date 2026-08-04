@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     shortcut: "/favicon-vb.svg",
     apple: [
       {
-        url: "/api/apple-icon",
+        url: "/apple-touch-icon.png",
         sizes: "180x180",
         type: "image/png",
       },
