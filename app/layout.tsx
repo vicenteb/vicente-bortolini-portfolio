@@ -21,12 +21,24 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     type: "website",
   },
+  appleWebApp: {
+    capable: true,
+    title: "Vicente Bortolini",
+    statusBarStyle: "black-translucent",
+  },
   other: {
     "codex-preview": "development",
   },
   icons: {
     icon: "/favicon-vb.svg",
     shortcut: "/favicon-vb.svg",
+    apple: [
+      {
+        url: "/api/apple-icon",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
   },
 };
 
