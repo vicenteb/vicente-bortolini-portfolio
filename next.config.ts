@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -6,7 +7,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "connect-src 'self'",
+  "connect-src 'self' https://o4511858670829568.ingest.us.sentry.io",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
@@ -52,4 +53,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: "vicente-bortolini",
+  project: "javascript-nextjs",
+  silent: true,
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+});

@@ -12,6 +12,7 @@
     "lint": "eslint . --ignore-pattern .next"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.69.0",
     "altcha": "^3.2.1",
     "altcha-lib": "^2.3.2",
     "next": "16.2.6",
