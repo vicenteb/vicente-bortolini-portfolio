@@ -3,6 +3,21 @@ a[x-apple-data-detectors] {
   text-decoration: none !important;
 }
 
+.contact-item p,
+.contact-item p *,
+.contact-item a,
+.contact-item a:link,
+.contact-item a:visited,
+.contact-value,
+.contact-value * {
+  color: inherit !important;
+  text-decoration: none !important;
+  -webkit-text-decoration: none !important;
+  text-decoration-line: none !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
 @media (max-width: 760px) {
   .edge-link-left {
     left: 1.35rem;
