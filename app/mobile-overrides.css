@@ -80,6 +80,20 @@ a[x-apple-data-detectors] {
 
   .about-screen .awards-drawer,
   .about-screen .studies-drawer {
+    padding-inline: 1.5rem;
     background: transparent;
+  }
+
+  .about-screen .awards-header {
+    padding-right: 3.25rem;
+  }
+
+  .about-screen .contact-close.awards-close {
+    right: 0;
+  }
+
+  .about-screen .awards-list,
+  .about-screen .studies-list {
+    padding-right: 0;
   }
 }
