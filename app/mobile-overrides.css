@@ -19,6 +19,26 @@ a[x-apple-data-detectors] {
 }
 
 @media (max-width: 760px) {
+  .home-screen .home-header,
+  .home-screen.about-screen .home-header,
+  .home-screen.works-screen .home-header,
+  .home-screen.project-screen .home-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 4.32rem;
+    padding: 1.5rem;
+    align-items: center;
+    transform: none;
+  }
+
+  .home-header .full-name,
+  .home-header .social-links {
+    margin: 0;
+    transform: none;
+  }
+
   .edge-link-left {
     left: 1.35rem;
   }
