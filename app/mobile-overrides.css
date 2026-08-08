@@ -1,0 +1,26 @@
+@media (max-width: 760px) {
+  .edge-link-left {
+    left: 1.35rem;
+  }
+
+  .edge-link-right {
+    right: 1.35rem;
+  }
+
+  .home-screen .edge-link-bottom,
+  .works-screen .edge-link-bottom,
+  .project-screen .edge-link-bottom {
+    background: transparent;
+    border-top: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .works-screen .home-header,
+  .project-screen .home-header {
+    background: transparent;
+    border-bottom: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
