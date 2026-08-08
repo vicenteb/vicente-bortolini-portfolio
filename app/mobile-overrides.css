@@ -42,4 +42,9 @@ a[x-apple-data-detectors] {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
+
+  .about-screen .awards-drawer,
+  .about-screen .studies-drawer {
+    background: transparent;
+  }
 }
