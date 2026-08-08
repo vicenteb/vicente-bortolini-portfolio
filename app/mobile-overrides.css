@@ -20,7 +20,6 @@ a[x-apple-data-detectors] {
 
 @media (max-width: 760px) {
   .home-screen .home-header,
-  .home-screen.about-screen .home-header,
   .home-screen.works-screen .home-header,
   .home-screen.project-screen .home-header {
     position: absolute;
@@ -31,6 +30,18 @@ a[x-apple-data-detectors] {
     padding: 1.5rem;
     align-items: center;
     transform: none;
+  }
+
+  .home-screen.about-screen .home-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 4.32rem;
+    padding: 1.5rem;
+    align-items: center;
+    transform: none;
+    z-index: 20;
   }
 
   .home-header .full-name,
@@ -76,6 +87,11 @@ a[x-apple-data-detectors] {
     border-top: 1px solid rgba(244, 242, 237, 0.035);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+  }
+
+  .about-screen .awards-overlay.is-open,
+  .about-screen .studies-overlay.is-open {
+    background: var(--background);
   }
 
   .about-screen .awards-drawer,
