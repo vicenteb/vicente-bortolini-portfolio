@@ -27,7 +27,6 @@ export const metadata: Metadata = {
     title: "Vicente Bortolini",
     statusBarStyle: "black-translucent",
   },
-  manifest: "/manifest.webmanifest",
   other: {
     "codex-preview": "development",
   },
@@ -36,7 +35,7 @@ export const metadata: Metadata = {
     shortcut: "/favicon-vb.svg",
     apple: [
       {
-        url: "/apple-touch-icon.png",
+        url: "/api/apple-icon",
         sizes: "180x180",
         type: "image/png",
       },
