@@ -33,15 +33,16 @@ a[x-apple-data-detectors] {
   }
 
   .home-screen.about-screen .home-header {
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: fixed !important;
+    inset: 0 0 auto 0 !important;
     width: 100%;
     min-height: 4.32rem;
     padding: 1.5rem;
     align-items: center;
-    transform: none;
-    z-index: 20;
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    will-change: transform;
+    z-index: 40;
   }
 
   .home-header .full-name,
