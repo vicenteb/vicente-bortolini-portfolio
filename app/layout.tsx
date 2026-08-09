@@ -33,13 +33,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon-vb.svg",
     shortcut: "/favicon-vb.svg",
-    apple: [
-      {
-        url: "/api/apple-icon",
-        sizes: "180x180",
-        type: "image/png",
-      },
-    ],
   },
 };
 
