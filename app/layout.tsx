@@ -47,7 +47,8 @@ export default function RootLayout({
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="/apple-touch-icon.png?v=5"
+          type="image/png"
+          href="/apple-icon?v=7"
         />
         <link
           rel="preload"
