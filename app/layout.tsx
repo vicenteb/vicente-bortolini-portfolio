@@ -45,6 +45,11 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png?v=5"
+        />
+        <link
           rel="preload"
           href="/fonts/montserrat-latin-400-normal.woff2"
           as="font"
