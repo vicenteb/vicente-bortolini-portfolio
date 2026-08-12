@@ -52,6 +52,8 @@ export default function HeroMaterialization({
     let influence = 0;
     let animationFrame = 0;
     let cancelled = false;
+    let pointerInteractionReady = false;
+    let pointerActivationTimer = 0;
 
     const addTextParticles = (
       node: Node | null | undefined,
@@ -205,6 +207,13 @@ export default function HeroMaterialization({
     };
 
     const onPointerMove = (event: PointerEvent) => {
+      const hasRealMovement =
+        Math.abs(event.movementX) + Math.abs(event.movementY) > 0;
+
+      if (!pointerInteractionReady || (!pointer.active && !hasRealMovement)) {
+        return;
+      }
+
       updatePointer(event.clientX, event.clientY);
     };
 
@@ -330,6 +339,9 @@ export default function HeroMaterialization({
       if (cancelled) return;
       buildParticles();
       animationFrame = window.requestAnimationFrame(draw);
+      pointerActivationTimer = window.setTimeout(() => {
+        pointerInteractionReady = true;
+      }, 240);
     };
 
     const resizeObserver = new ResizeObserver(buildParticles);
@@ -349,6 +361,7 @@ export default function HeroMaterialization({
     return () => {
       cancelled = true;
       window.cancelAnimationFrame(animationFrame);
+      window.clearTimeout(pointerActivationTimer);
       resizeObserver.disconnect();
       heading.style.opacity = "";
       heading.style.maskImage = "";
