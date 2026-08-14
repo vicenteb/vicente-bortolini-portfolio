@@ -1535,6 +1535,10 @@ button:focus-visible {
 }
 
 @media (hover: none) {
+  .project-description-toggle[aria-expanded="true"]::after {
+    transform: scaleX(1);
+  }
+
   .contact-close:focus,
   .contact-close:focus-visible {
     border-radius: 0;
