@@ -992,15 +992,36 @@ export default function HomeExperience({
                 disabled={!hasPreviousProject || isProjectSwitching}
                 onClick={() => navigateProject("previous")}
               >
-                Anterior
+                <span className="project-navigation-arrow" aria-hidden="true">
+                  ←
+                </span>
+                <span>Anterior</span>
               </button>
+              <span
+                className="project-pagination"
+                role="status"
+                aria-label={`Trabalho ${activeProjectIndex + 1} de ${projectSequence.length}`}
+              >
+                {projectSequence.map((project, index) => (
+                  <span
+                    className={`project-pagination-dot${
+                      index === activeProjectIndex ? " is-active" : ""
+                    }`}
+                    aria-hidden="true"
+                    key={project.view}
+                  />
+                ))}
+              </span>
               <button
                 className="project-navigation-button"
                 type="button"
                 disabled={!hasNextProject || isProjectSwitching}
                 onClick={() => navigateProject("next")}
               >
-                Próximo
+                <span>Próximo</span>
+                <span className="project-navigation-arrow" aria-hidden="true">
+                  →
+                </span>
               </button>
             </nav>
             <h1 id="project-title">{activeProject.title}</h1>
@@ -1085,15 +1106,36 @@ export default function HomeExperience({
                 disabled={!hasPreviousProject || isProjectSwitching}
                 onClick={() => navigateProject("previous")}
               >
-                Anterior
+                <span className="project-navigation-arrow" aria-hidden="true">
+                  ←
+                </span>
+                <span>Anterior</span>
               </button>
+              <span
+                className="project-pagination"
+                role="status"
+                aria-label={`Trabalho ${activeProjectIndex + 1} de ${projectSequence.length}`}
+              >
+                {projectSequence.map((project, index) => (
+                  <span
+                    className={`project-pagination-dot${
+                      index === activeProjectIndex ? " is-active" : ""
+                    }`}
+                    aria-hidden="true"
+                    key={project.view}
+                  />
+                ))}
+              </span>
               <button
                 className="project-navigation-button"
                 type="button"
                 disabled={!hasNextProject || isProjectSwitching}
                 onClick={() => navigateProject("next")}
               >
-                Próximo
+                <span>Próximo</span>
+                <span className="project-navigation-arrow" aria-hidden="true">
+                  →
+                </span>
               </button>
             </nav>
           </div>
