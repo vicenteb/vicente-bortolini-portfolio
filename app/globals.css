@@ -553,15 +553,16 @@ a {
 
 .project-navigation {
   display: flex;
-  width: min(100%, 18rem);
+  width: min(100%, 27rem);
   margin: 0 auto 2.1rem;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: clamp(1rem, 2.5vw, 2rem);
 }
 
 .project-navigation-button {
   position: relative;
+  display: inline-flex;
   border: 0;
   padding: 0 0 0.42rem;
   background: transparent;
@@ -571,6 +572,8 @@ a {
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  align-items: center;
+  gap: 0.48rem;
   cursor: pointer;
   transition:
     color 180ms ease,
@@ -607,6 +610,44 @@ a {
 
 .project-navigation-button:disabled::after {
   display: none;
+}
+
+.project-navigation-arrow {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 0.65;
+  transition: transform 220ms ease;
+}
+
+.project-pagination {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.46rem;
+}
+
+.project-pagination-dot {
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50%;
+  background: rgba(244, 242, 237, 0.28);
+  transition:
+    width 280ms ease,
+    height 280ms ease,
+    background-color 280ms ease,
+    box-shadow 280ms ease,
+    transform 280ms ease;
+}
+
+.project-pagination-dot.is-active {
+  width: 0.46rem;
+  height: 0.46rem;
+  background: var(--link-accent);
+  box-shadow: 0 0 0.75rem rgba(88, 70, 202, 0.48);
+  transform: scale(1.05);
 }
 
 .project-subtitle {
@@ -1593,6 +1634,16 @@ button:focus-visible {
 
   .project-navigation-button:not(:disabled):hover::after {
     transform: scaleX(1);
+  }
+
+  .project-navigation-button:not(:disabled):first-child:hover
+    .project-navigation-arrow {
+    transform: translateX(-0.18rem);
+  }
+
+  .project-navigation-button:not(:disabled):last-child:hover
+    .project-navigation-arrow {
+    transform: translateX(0.18rem);
   }
 
   .full-name:hover,
