@@ -992,9 +992,10 @@ export default function HomeExperience({
                 disabled={!hasPreviousProject || isProjectSwitching}
                 onClick={() => navigateProject("previous")}
               >
-                <span className="project-navigation-arrow" aria-hidden="true">
-                  ←
-                </span>
+                <span
+                  className="project-navigation-arrow is-previous"
+                  aria-hidden="true"
+                />
                 <span>Anterior</span>
               </button>
               <span
@@ -1019,9 +1020,7 @@ export default function HomeExperience({
                 onClick={() => navigateProject("next")}
               >
                 <span>Próximo</span>
-                <span className="project-navigation-arrow" aria-hidden="true">
-                  →
-                </span>
+                <span className="project-navigation-arrow" aria-hidden="true" />
               </button>
             </nav>
             <h1 id="project-title">{activeProject.title}</h1>
@@ -1106,9 +1105,10 @@ export default function HomeExperience({
                 disabled={!hasPreviousProject || isProjectSwitching}
                 onClick={() => navigateProject("previous")}
               >
-                <span className="project-navigation-arrow" aria-hidden="true">
-                  ←
-                </span>
+                <span
+                  className="project-navigation-arrow is-previous"
+                  aria-hidden="true"
+                />
                 <span>Anterior</span>
               </button>
               <span
@@ -1133,9 +1133,7 @@ export default function HomeExperience({
                 onClick={() => navigateProject("next")}
               >
                 <span>Próximo</span>
-                <span className="project-navigation-arrow" aria-hidden="true">
-                  →
-                </span>
+                <span className="project-navigation-arrow" aria-hidden="true" />
               </button>
             </nav>
           </div>
