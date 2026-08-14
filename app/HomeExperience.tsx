@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createElement, useEffect, useRef, useState } from "react";
+import {
+  createElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import HeroMaterialization from "@/components/ui/hero-materialization";
 import InteractiveStarfield from "@/components/ui/interactive-starfield";
 import SkeletonImage from "@/components/ui/skeleton-image";
@@ -250,6 +256,33 @@ const projectDetails = {
   },
 };
 
+const projectSequence = [
+  {
+    view: "rennerProject",
+    href: "/trabalhos/lojas-renner-app-reposicao",
+  },
+  {
+    view: "sicrediProject",
+    href: "/trabalhos/sicredi-portabilidade-multifundos",
+  },
+  {
+    view: "panvelPdvMovelProject",
+    href: "/trabalhos/panvel-pdv-movel",
+  },
+  {
+    view: "panvelSelfCheckoutProject",
+    href: "/trabalhos/panvel-self-checkout",
+  },
+  {
+    view: "panvelOmniPedidosProject",
+    href: "/trabalhos/panvel-app-omni-pedidos",
+  },
+  {
+    view: "panvelOmniPdvProject",
+    href: "/trabalhos/panvel-omnipdv",
+  },
+] as const;
+
 const awards = [
   { date: "Ago de 2022", title: "Prêmio As 100+ Inovadoras no Uso de TI", issuer: "IT Mídia em parceria com a FIAP", association: "Grupo PanVel" },
   { date: "Nov de 2021", title: "Prêmio ABRAPPE 2021 - Melhor case de inovação", issuer: "ABRAPPE", association: "Grupo PanVel" },
@@ -281,6 +314,9 @@ export default function HomeExperience({
   const [selectedWork, setSelectedWork] = useState(0);
   const [isProjectDescriptionExpanded, setIsProjectDescriptionExpanded] =
     useState(false);
+  const [projectTransitionDirection, setProjectTransitionDirection] = useState<
+    "previous" | "next" | null
+  >(null);
   const [contactData, setContactData] = useState<ContactData | null>(null);
   const [pendingContact, setPendingContact] = useState<ContactField | null>(null);
   const [contactFeedback, setContactFeedback] = useState("");
@@ -293,6 +329,7 @@ export default function HomeExperience({
   const studiesTriggerRef = useRef<HTMLButtonElement>(null);
   const studiesCloseButtonRef = useRef<HTMLButtonElement>(null);
   const projectContentRef = useRef<HTMLElement>(null);
+  const projectTouchStartRef = useRef<{ x: number; y: number } | null>(null);
   const altchaWidgetRef = useRef<AltchaWidget | null>(null);
   const contactToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -321,6 +358,77 @@ export default function HomeExperience({
             : initialView === "panvelOmniPdvProject"
               ? projectDetails.panvelOmniPdvProject
               : projectDetails.rennerProject;
+  const activeProjectIndex = projectSequence.findIndex(
+    (project) => project.view === initialView,
+  );
+  const hasPreviousProject = activeProjectIndex > 0;
+  const hasNextProject =
+    activeProjectIndex >= 0 && activeProjectIndex < projectSequence.length - 1;
+  const isProjectSwitching = projectTransitionDirection !== null;
+
+  const navigateProject = useCallback(
+    (direction: "previous" | "next") => {
+      if (activeProjectIndex < 0 || projectTransitionDirection) return;
+
+      const targetIndex =
+        activeProjectIndex + (direction === "next" ? 1 : -1);
+      const targetProject = projectSequence[targetIndex];
+
+      if (!targetProject) return;
+
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      setProjectTransitionDirection(direction);
+      window.setTimeout(
+        () => router.push(targetProject.href),
+        prefersReducedMotion ? 0 : 280,
+      );
+    },
+    [activeProjectIndex, projectTransitionDirection, router],
+  );
+
+  useEffect(() => {
+    if (!isProject || activeProjectIndex < 0) return;
+
+    const previousProject = projectSequence[activeProjectIndex - 1];
+    const nextProject = projectSequence[activeProjectIndex + 1];
+
+    if (previousProject) router.prefetch(previousProject.href);
+    if (nextProject) router.prefetch(nextProject.href);
+  }, [activeProjectIndex, isProject, router]);
+
+  useEffect(() => {
+    if (!isProject) return;
+
+    const supportsKeyboardNavigation = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+
+    if (!supportsKeyboardNavigation) return;
+
+    const onProjectKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+
+      if (target?.matches("input, textarea, select, [contenteditable='true']")) {
+        return;
+      }
+
+      if (event.key === "ArrowLeft" && hasPreviousProject) {
+        event.preventDefault();
+        navigateProject("previous");
+      }
+
+      if (event.key === "ArrowRight" && hasNextProject) {
+        event.preventDefault();
+        navigateProject("next");
+      }
+    };
+
+    window.addEventListener("keydown", onProjectKeyDown);
+    return () => window.removeEventListener("keydown", onProjectKeyDown);
+  }, [hasNextProject, hasPreviousProject, isProject, navigateProject]);
 
   useEffect(() => {
     const savedContact = window.sessionStorage.getItem("verified-contact");
@@ -844,11 +952,57 @@ export default function HomeExperience({
       ) : isProject ? (
         <section
           ref={projectContentRef}
-          className="project-content"
+          className={`project-content${
+            projectTransitionDirection
+              ? ` is-switching is-switching-${projectTransitionDirection}`
+              : ""
+          }`}
           id="conteudo"
           aria-labelledby="project-title"
+          onTouchStart={(event) => {
+            const touch = event.changedTouches[0];
+            projectTouchStartRef.current = { x: touch.clientX, y: touch.clientY };
+          }}
+          onTouchEnd={(event) => {
+            const start = projectTouchStartRef.current;
+            projectTouchStartRef.current = null;
+
+            if (!start || isProjectSwitching) return;
+
+            const touch = event.changedTouches[0];
+            const deltaX = touch.clientX - start.x;
+            const deltaY = touch.clientY - start.y;
+
+            if (Math.abs(deltaX) < 64 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) {
+              return;
+            }
+
+            if (deltaX < 0 && hasNextProject) navigateProject("next");
+            if (deltaX > 0 && hasPreviousProject) navigateProject("previous");
+          }}
+          onTouchCancel={() => {
+            projectTouchStartRef.current = null;
+          }}
         >
           <header className="project-intro" id="project-top">
+            <nav className="project-navigation" aria-label="Navegação entre trabalhos">
+              <button
+                className="project-navigation-button"
+                type="button"
+                disabled={!hasPreviousProject || isProjectSwitching}
+                onClick={() => navigateProject("previous")}
+              >
+                Anterior
+              </button>
+              <button
+                className="project-navigation-button"
+                type="button"
+                disabled={!hasNextProject || isProjectSwitching}
+                onClick={() => navigateProject("next")}
+              >
+                Próximo
+              </button>
+            </nav>
             <h1 id="project-title">{activeProject.title}</h1>
             <p className="project-subtitle">{activeProject.subtitle}</p>
             <p className="project-year">{activeProject.year}</p>
@@ -921,6 +1075,27 @@ export default function HomeExperience({
               </svg>
               <span>Voltar ao topo</span>
             </a>
+            <nav
+              className="project-navigation project-navigation-footer"
+              aria-label="Navegação entre trabalhos no final da página"
+            >
+              <button
+                className="project-navigation-button"
+                type="button"
+                disabled={!hasPreviousProject || isProjectSwitching}
+                onClick={() => navigateProject("previous")}
+              >
+                Anterior
+              </button>
+              <button
+                className="project-navigation-button"
+                type="button"
+                disabled={!hasNextProject || isProjectSwitching}
+                onClick={() => navigateProject("next")}
+              >
+                Próximo
+              </button>
+            </nav>
           </div>
         </section>
       ) : (
