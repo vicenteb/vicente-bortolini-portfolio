@@ -614,11 +614,17 @@ a {
 
 .project-navigation-arrow {
   display: inline-block;
-  font-size: 1rem;
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 0.65;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+  background: currentColor;
+  mask: url("/chevron-right.svg") center / contain no-repeat;
+  -webkit-mask: url("/chevron-right.svg") center / contain no-repeat;
   transition: transform 220ms ease;
+}
+
+.project-navigation-arrow.is-previous {
+  transform: rotate(180deg);
 }
 
 .project-pagination {
@@ -627,6 +633,7 @@ a {
   align-items: center;
   justify-content: center;
   gap: 0.46rem;
+  transform: translateY(-0.21rem);
 }
 
 .project-pagination-dot {
@@ -1638,7 +1645,7 @@ button:focus-visible {
 
   .project-navigation-button:not(:disabled):first-child:hover
     .project-navigation-arrow {
-    transform: translateX(-0.18rem);
+    transform: rotate(180deg) translateX(0.18rem);
   }
 
   .project-navigation-button:not(:disabled):last-child:hover
