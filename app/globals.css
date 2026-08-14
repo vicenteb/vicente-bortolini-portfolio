@@ -614,8 +614,8 @@ a {
 
 .project-navigation-arrow {
   display: inline-block;
-  width: 1.05rem;
-  height: 1.05rem;
+  width: 1.25rem;
+  height: 1.25rem;
   flex: 0 0 auto;
   background: currentColor;
   mask: url("/chevron-right.svg") center / contain no-repeat;
