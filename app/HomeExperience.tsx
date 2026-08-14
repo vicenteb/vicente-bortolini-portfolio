@@ -279,6 +279,8 @@ export default function HomeExperience({
   const [isLeavingAbout, setIsLeavingAbout] = useState(false);
   const [isLeavingWorks, setIsLeavingWorks] = useState(false);
   const [selectedWork, setSelectedWork] = useState(0);
+  const [isProjectDescriptionExpanded, setIsProjectDescriptionExpanded] =
+    useState(false);
   const [contactData, setContactData] = useState<ContactData | null>(null);
   const [pendingContact, setPendingContact] = useState<ContactField | null>(null);
   const [contactFeedback, setContactFeedback] = useState("");
@@ -850,7 +852,27 @@ export default function HomeExperience({
             <h1 id="project-title">{activeProject.title}</h1>
             <p className="project-subtitle">{activeProject.subtitle}</p>
             <p className="project-year">{activeProject.year}</p>
-            <p className="project-description">{activeProject.description}</p>
+            <div className="project-description-disclosure">
+              <p
+                className={`project-description${
+                  isProjectDescriptionExpanded ? " is-expanded" : ""
+                }`}
+                id="project-description"
+              >
+                {activeProject.description}
+              </p>
+              <button
+                className="project-description-toggle"
+                type="button"
+                aria-expanded={isProjectDescriptionExpanded}
+                aria-controls="project-description"
+                onClick={() =>
+                  setIsProjectDescriptionExpanded((isExpanded) => !isExpanded)
+                }
+              >
+                {isProjectDescriptionExpanded ? "Ver menos" : "Ver mais"}
+              </button>
+            </div>
           </header>
 
           <div className="project-gallery" aria-label="Imagens do projeto">
