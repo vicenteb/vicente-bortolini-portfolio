@@ -1716,6 +1716,15 @@ button:focus-visible {
   }
 }
 
+@media (max-width: 760px), (pointer: coarse) {
+  .project-new-tag {
+    justify-content: center;
+    /* Balance uppercase font metrics and the trailing letter-spacing. */
+    padding: 0.44em 0.6em 0.28em 0.7em;
+    text-align: center;
+  }
+}
+
 @media (hover: none) {
   .project-description-toggle[aria-expanded="true"]::after {
     transform: scaleX(1);
