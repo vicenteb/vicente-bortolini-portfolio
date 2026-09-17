@@ -411,6 +411,35 @@ a {
   font-weight: 800;
 }
 
+.project-new-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.36em 0.7em;
+  border: 1px solid rgba(70, 200, 202, 0.28);
+  border-radius: 999px;
+  background: rgba(70, 200, 202, 0.08);
+  color: #46c8ca;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.work-new-tag-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.65rem;
+}
+
+.project-new-tag-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.1rem;
+}
+
 .work-project-link {
   margin-top: 0.65rem;
   font-size: clamp(0.7rem, 0.72vw, 0.78rem);

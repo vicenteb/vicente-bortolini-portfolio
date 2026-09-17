@@ -40,6 +40,7 @@ type HomeExperienceProps = {
     | "home"
     | "about"
     | "works"
+    | "rennerRemarcacaoProject"
     | "rennerProject"
     | "sicrediProject"
     | "panvelPdvMovelProject"
@@ -85,7 +86,18 @@ type AltchaWidget = HTMLElement & {
   verify: () => Promise<unknown>;
 };
 
-const selectedWorks = [
+const selectedWorks: {
+  title: string;
+  image: string;
+  projectHref: string;
+  isNew?: boolean;
+}[] = [
+  {
+    title: "Lojas Renner - App Remarcação",
+    image: "/renner-remarcacao-01.jpg",
+    projectHref: "/trabalhos/lojas-renner-app-remarcacao",
+    isNew: true,
+  },
   {
     title: "Lojas Renner - App Reposição",
     image: "/lojas-renner-app-reposicao.jpg",
@@ -116,6 +128,25 @@ const selectedWorks = [
     image: "/panvel-omni-pdv.jpg",
     projectHref: "/trabalhos/panvel-omnipdv",
   },
+];
+
+const rennerRemarcacaoProjectImages = [
+  { src: "/renner-remarcacao-01.jpg", width: 1400, height: 3000 },
+  { src: "/renner-remarcacao-02.jpg", width: 1400, height: 2993 },
+  { src: "/renner-remarcacao-03.jpg", width: 1400, height: 2993 },
+  { src: "/renner-remarcacao-04.jpg", width: 1400, height: 2143 },
+  { src: "/renner-remarcacao-05.jpg", width: 1400, height: 1281 },
+  { src: "/renner-remarcacao-06.jpg", width: 1400, height: 2555 },
+  { src: "/renner-remarcacao-07.jpg", width: 1400, height: 2694 },
+  { src: "/renner-remarcacao-08.jpg", width: 1400, height: 2100 },
+  { src: "/renner-remarcacao-09.jpg", width: 1400, height: 2100 },
+  { src: "/renner-remarcacao-10.jpg", width: 1400, height: 2100 },
+  { src: "/renner-remarcacao-11.jpg", width: 1400, height: 2100 },
+  { src: "/renner-remarcacao-12.jpg", width: 1400, height: 2202 },
+  { src: "/renner-remarcacao-13.jpg", width: 1400, height: 3466 },
+  { src: "/renner-remarcacao-14.jpg", width: 1400, height: 2100 },
+  { src: "/renner-remarcacao-15.jpg", width: 1024, height: 1536 },
+  { src: "/renner-remarcacao-16.jpg", width: 1400, height: 2484 },
 ];
 
 const rennerProjectImages = [
@@ -199,6 +230,15 @@ const panvelOmniPdvProjectImages = Array.from(
 );
 
 const projectDetails = {
+  rennerRemarcacaoProject: {
+    title: "Lojas Renner - App Remarcação",
+    subtitle: "Preços atualizados no ritmo da loja",
+    year: "2015 / 2026 - AI Redesign",
+    description:
+      "A remarcação de preços com folhas adesivas A4 exigia localizar produtos pelo salão de vendas, tornando a operação lenta, cansativa e dispendiosa. O App Remarcação reúne solicitações, conferência de produtos e impressão de etiquetas sob demanda em uma única jornada. Pelos modos Guiado e Varredura, o colaborador identifica o produto, confere cor, tamanho e novo preço, acompanha as quantidades remarcadas e registra execuções completas ou parciais, com notificações, status e histórico. A proposta leva a impressão até o produto, reduzindo deslocamentos e desperdícios de etiquetas. O aplicativo foi redesenhado com o apoio de IA e ChatGPT, desde a revisão dos fluxos e do Design System Agilize Renner até a implementação do protótipo. Desenvolvido com React Native, Expo e TypeScript, utiliza câmera para leitura de códigos de barras, zoom por gestos, skeleton loading e componentes SVG, com execução em iOS, Android e Web, versionamento no GitHub e publicação na Vercel.",
+    images: rennerRemarcacaoProjectImages,
+    imageAlt: "Lojas Renner App Remarcação",
+  },
   rennerProject: {
     title: "Lojas Renner - App Reposição",
     subtitle: "Vendas e Estoque em sintonia",
@@ -257,6 +297,10 @@ const projectDetails = {
 };
 
 const projectSequence = [
+  {
+    view: "rennerRemarcacaoProject",
+    href: "/trabalhos/lojas-renner-app-remarcacao",
+  },
   {
     view: "rennerProject",
     href: "/trabalhos/lojas-renner-app-reposicao",
@@ -340,6 +384,7 @@ export default function HomeExperience({
   const isAbout = initialView === "about";
   const isWorks = initialView === "works";
   const isProject =
+    initialView === "rennerRemarcacaoProject" ||
     initialView === "rennerProject" ||
     initialView === "sicrediProject" ||
     initialView === "panvelPdvMovelProject" ||
@@ -357,7 +402,9 @@ export default function HomeExperience({
             ? projectDetails.panvelOmniPedidosProject
             : initialView === "panvelOmniPdvProject"
               ? projectDetails.panvelOmniPdvProject
-              : projectDetails.rennerProject;
+              : initialView === "rennerRemarcacaoProject"
+                ? projectDetails.rennerRemarcacaoProject
+                : projectDetails.rennerProject;
   const activeProjectIndex = projectSequence.findIndex(
     (project) => project.view === initialView,
   );
@@ -898,6 +945,11 @@ export default function HomeExperience({
                   role="listitem"
                   key={work.title}
                 >
+                  {work.isNew && (
+                    <div className="work-new-tag-row">
+                      <span className="project-new-tag">NOVIDADE</span>
+                    </div>
+                  )}
                   <button
                     className="work-title"
                     type="button"
@@ -1024,6 +1076,11 @@ export default function HomeExperience({
               </button>
             </nav>
             <h1 id="project-title">{activeProject.title}</h1>
+            {initialView === "rennerRemarcacaoProject" && (
+              <div className="project-new-tag-row">
+                <span className="project-new-tag">NOVIDADE</span>
+              </div>
+            )}
             <p className="project-subtitle">{activeProject.subtitle}</p>
             <p className="project-year">{activeProject.year}</p>
             <div className="project-description-disclosure">
