@@ -988,18 +988,23 @@ export default function HomeExperience({
             </a>
           </div>
 
-          <SkeletonImage
-            key={selectedWorks[selectedWork].image}
-            containerClassName="works-preview has-cover"
-            containerAriaLabel={`Imagem do projeto ${selectedWorks[selectedWork].title}`}
-            imageClassName="works-preview-image"
-            src={selectedWorks[selectedWork].image}
-            alt=""
-            fill
-            priority={selectedWork === 0}
-            quality={72}
-            sizes="50vw"
-          />
+          <Link
+            className="works-preview has-cover"
+            href={selectedWorks[selectedWork].projectHref}
+            aria-label={`Visualizar projeto ${selectedWorks[selectedWork].title}`}
+          >
+            <SkeletonImage
+              key={selectedWorks[selectedWork].image}
+              containerClassName="works-preview-media"
+              imageClassName="works-preview-image"
+              src={selectedWorks[selectedWork].image}
+              alt=""
+              fill
+              priority={selectedWork === 0}
+              quality={72}
+              sizes="50vw"
+            />
+          </Link>
         </section>
       ) : isProject ? (
         <section
