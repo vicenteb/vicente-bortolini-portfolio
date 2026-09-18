@@ -854,6 +854,23 @@ export default function HomeExperience({
         >
           <SkeletonImage
             containerClassName="about-photo"
+            onContainerPointerMove={(event) => {
+              if (event.pointerType !== "mouse" || !window.matchMedia("(min-width: 761px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)").matches) return;
+              const photo = event.currentTarget;
+              const bounds = photo.getBoundingClientRect();
+              const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+              const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+              photo.style.setProperty("--photo-x", `${x * 18}px`);
+              photo.style.setProperty("--photo-y", `${y * 14}px`);
+              photo.style.setProperty("--photo-rotate-x", `${-y * 5}deg`);
+              photo.style.setProperty("--photo-rotate-y", `${x * 5}deg`);
+              photo.classList.add("is-parallax-active");
+            }}
+            onContainerPointerLeave={(event) => {
+              const photo = event.currentTarget;
+              photo.classList.remove("is-parallax-active");
+              ["--photo-x", "--photo-y", "--photo-rotate-x", "--photo-rotate-y"].forEach((property) => photo.style.removeProperty(property));
+            }}
             src="/vicente-bortolini-perfil.jpeg"
             alt=""
             fill

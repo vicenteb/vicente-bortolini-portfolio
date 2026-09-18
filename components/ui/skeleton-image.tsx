@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { type ImageProps } from "next/image";
-import { useState, type CSSProperties } from "react";
+import { useState, type CSSProperties, type PointerEventHandler } from "react";
 
 type SkeletonImageProps = ImageProps & {
   containerClassName: string;
@@ -9,6 +9,8 @@ type SkeletonImageProps = ImageProps & {
   imageClassName?: string;
   containerAriaLabel?: string;
   decorative?: boolean;
+  onContainerPointerMove?: PointerEventHandler<HTMLDivElement>;
+  onContainerPointerLeave?: PointerEventHandler<HTMLDivElement>;
 };
 
 export default function SkeletonImage({
@@ -17,6 +19,8 @@ export default function SkeletonImage({
   imageClassName,
   containerAriaLabel,
   decorative = false,
+  onContainerPointerMove,
+  onContainerPointerLeave,
   alt,
   ...imageProps
 }: SkeletonImageProps) {
@@ -31,6 +35,8 @@ export default function SkeletonImage({
       aria-hidden={decorative || undefined}
       aria-label={containerAriaLabel}
       role={containerAriaLabel ? "img" : undefined}
+      onPointerMove={onContainerPointerMove}
+      onPointerLeave={onContainerPointerLeave}
     >
       <span className="media-skeleton-placeholder" aria-hidden="true" />
       <Image
