@@ -145,7 +145,7 @@ const rennerRemarcacaoProjectImages = [
   { src: "/renner-remarcacao-12.jpg", width: 1400, height: 2202 },
   { src: "/renner-remarcacao-13.jpg", width: 1400, height: 3466 },
   { src: "/renner-remarcacao-14.jpg", width: 1400, height: 2100 },
-  { src: "/renner-remarcacao-15.jpg", width: 1024, height: 1536 },
+  { src: "/renner-remarcacao-15-v2.jpg", width: 1400, height: 2100 },
   { src: "/renner-remarcacao-16.jpg", width: 1400, height: 2484 },
 ];
 
