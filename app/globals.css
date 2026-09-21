@@ -246,6 +246,7 @@ a {
   place-items: center;
   opacity: 0.82;
   transition:
+    color 260ms ease,
     opacity 180ms ease,
     transform 180ms ease;
 }
@@ -1779,6 +1780,7 @@ button:focus-visible {
   }
 
   .social-links a:hover {
+    color: var(--link-accent);
     opacity: 1;
   }
 
