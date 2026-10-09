@@ -140,9 +140,16 @@ a[x-apple-data-detectors] {
     padding: calc(0.9rem + env(safe-area-inset-top))
       calc(1.5rem + env(safe-area-inset-right)) 0.9rem
       calc(1.5rem + env(safe-area-inset-left));
-    background: linear-gradient(180deg, #05060a 60%, rgba(5, 6, 10, 0.94));
+    background: linear-gradient(180deg, rgba(5, 6, 10, 0.99) 0%, rgba(5, 6, 10, 0.94) 62%, rgba(5, 6, 10, 0.7) 82%, transparent 100%);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+  }
+
+  .home-screen:not(.about-screen):not(.works-screen):not(.project-screen) .home-header {
+    background: transparent;
+    border-bottom: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .full-name { font-size: 0.72rem; gap: 0.6rem; }
@@ -166,10 +173,17 @@ a[x-apple-data-detectors] {
     justify-content: center;
     transform: none;
     opacity: 1;
-    background: linear-gradient(0deg, #05060a 60%, rgba(5, 6, 10, 0.94));
+    background: linear-gradient(0deg, rgba(5, 6, 10, 0.99) 0%, rgba(5, 6, 10, 0.94) 62%, rgba(5, 6, 10, 0.7) 82%, transparent 100%);
     border-top: 1px solid rgba(244, 242, 237, 0.035);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+  }
+
+  .home-screen:not(.about-screen):not(.works-screen):not(.project-screen) .edge-link-bottom {
+    background: transparent;
+    border-top: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .home-screen .contact-trigger::after {
