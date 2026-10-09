@@ -2387,6 +2387,26 @@ button:focus-visible {
   .about-photo {
     aspect-ratio: 1 / 1;
   }
+
+  .about-screen.is-awards-open .about-photo {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .about-screen .awards-overlay {
+    grid-template-columns: minmax(18rem, 0.9fr) minmax(24rem, 1.1fr);
+    align-items: start;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .about-screen .awards-drawer {
+    grid-column: 2;
+    height: min(67vh, 46rem);
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+  }
 }
 
 @media (max-height: 600px) and (orientation: landscape) {
