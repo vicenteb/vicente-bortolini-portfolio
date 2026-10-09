@@ -2383,6 +2383,12 @@ button:focus-visible {
   }
 }
 
+@media (min-width: 761px) and (max-width: 1366px) and (min-height: 601px) and (pointer: coarse) and (orientation: landscape) {
+  .about-photo {
+    aspect-ratio: 1 / 1;
+  }
+}
+
 @media (max-height: 600px) and (orientation: landscape) {
   .home-screen {
     min-height: 100svh;
