@@ -12,6 +12,7 @@ import {
 import HeroMaterialization from "@/components/ui/hero-materialization";
 import InteractiveStarfield from "@/components/ui/interactive-starfield";
 import SkeletonImage from "@/components/ui/skeleton-image";
+import { ArrowUp, PortfolioButton } from "@/components/portfolio/portfolio-button";
 
 const BehanceIcon = () => (
   <svg
@@ -1149,11 +1150,11 @@ export default function HomeExperience({
           </div>
 
           <div className="project-footer">
-            <a
-              className="project-back-to-top"
-              href="#conteudo"
-              onClick={(event) => {
-                event.preventDefault();
+            <PortfolioButton
+              variant="secondary"
+              size="medium"
+              trailingIcon={<ArrowUp />}
+              onClick={() => {
                 projectContentRef.current?.scrollTo({
                   top: 0,
                   behavior: "smooth",
@@ -1165,15 +1166,8 @@ export default function HomeExperience({
                 );
               }}
             >
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                focusable="false"
-              >
-                <path d="M12 19V5M6.5 10.5 12 5l5.5 5.5" />
-              </svg>
-              <span>Voltar ao topo</span>
-            </a>
+              Voltar ao topo
+            </PortfolioButton>
             <nav
               className="project-navigation project-navigation-footer"
               aria-label="Navegação entre trabalhos no final da página"

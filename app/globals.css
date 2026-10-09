@@ -904,35 +904,60 @@ a {
   margin: 0;
 }
 
-.project-back-to-top {
+/* PortfolioButton: same component and states as the VB design system. */
+.portfolio-button {
+  --button-height: 44px;
+  --button-padding: 18px;
+  --button-accent: var(--link-accent);
+  --button-text: var(--foreground);
+  --button-line: rgba(244, 242, 237, 0.13);
+  --button-subtle: #757985;
+  --button-soft: rgba(244, 242, 237, 0.05);
+  position: relative;
   display: inline-flex;
-  min-height: 3rem;
-  padding: 0.85rem 1.15rem;
-  border: 1px solid rgba(244, 242, 237, 0.18);
+  max-width: 100%;
+  min-height: var(--button-height);
+  padding: 0 var(--button-padding);
+  border: 1px solid transparent;
+  border-radius: 12px;
   align-items: center;
-  gap: 0.7rem;
-  background: rgba(244, 242, 237, 0.07);
-  color: rgba(244, 242, 237, 0.82);
-  font-family: "Roboto", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  transition:
-    background-color 220ms ease,
-    border-color 220ms ease,
-    color 220ms ease;
+  justify-content: center;
+  gap: 10px;
+  font: 600 11px/1.2 var(--font-title);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease, opacity .18s ease;
 }
 
-.project-back-to-top svg {
-  width: 1rem;
-  height: 1rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.5;
-}
+.portfolio-button--small { --button-height: 36px; --button-padding: 14px; font-size: 10px; gap: 7px; }
+.portfolio-button--large { --button-height: 52px; --button-padding: 22px; font-size: 12px; gap: 12px; }
+.portfolio-button--primary { background: var(--button-accent); border-color: var(--button-accent); color: #fff; }
+.portfolio-button--secondary { background: transparent; border-color: var(--button-accent); color: var(--button-text); }
+.portfolio-button--tertiary { background: transparent; border-color: transparent; color: var(--button-text); padding-inline: 8px; }
+.portfolio-button--primary:not(:disabled):hover { background: color-mix(in srgb, var(--button-accent) 83%, #080611); border-color: color-mix(in srgb, var(--button-accent) 83%, #080611); transform: translateY(-1px); box-shadow: 0 8px 20px color-mix(in srgb, var(--button-accent) 22%, transparent); }
+.portfolio-button--secondary:not(:disabled):hover { background: color-mix(in srgb, var(--button-accent) 12%, transparent); transform: translateY(-1px); }
+.portfolio-button--tertiary:not(:disabled):hover { color: color-mix(in srgb, var(--button-accent) 72%, var(--button-text)); text-decoration: underline; text-decoration-color: var(--button-accent); text-underline-offset: 5px; text-decoration-thickness: 2px; }
+.portfolio-button:not(:disabled):active { transform: translateY(1px); box-shadow: inset 0 2px 7px #0003; }
+.portfolio-button:focus-visible { border-radius: 12px; outline: 2px solid var(--button-accent); outline-offset: 4px; box-shadow: 0 0 0 5px color-mix(in srgb, var(--button-accent) 18%, transparent); }
+.portfolio-button:disabled { cursor: not-allowed; transform: none; box-shadow: none; }
+.portfolio-button--primary:disabled { background: color-mix(in srgb, var(--button-accent) 38%, var(--surface)); border-color: transparent; color: color-mix(in srgb, #fff 65%, var(--surface)); }
+.portfolio-button--secondary:disabled { border-color: var(--button-line); color: var(--button-subtle); background: var(--button-soft); }
+.portfolio-button--tertiary:disabled { color: var(--button-subtle); opacity: .55; }
+.portfolio-button.is-loading { opacity: 1; }
+.portfolio-button.is-loading.portfolio-button--primary { background: var(--button-accent); color: #fff; }
+.portfolio-button.is-loading.portfolio-button--secondary { border-color: var(--button-accent); color: var(--button-text); }
+.portfolio-button.is-loading.portfolio-button--tertiary { color: var(--button-text); }
+.portfolio-button.is-full-width { width: 100%; }
+.portfolio-button.is-icon-only { width: var(--button-height); padding: 0; }
+.portfolio-button-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.portfolio-button-icon svg, .portfolio-button-spinner { width: 15px; height: 15px; }
+.portfolio-button--small .portfolio-button-icon svg { width: 13px; height: 13px; }
+.portfolio-button--large .portfolio-button-icon svg { width: 17px; height: 17px; }
+.portfolio-button-spinner { animation: field-spin .8s linear infinite; }
+@keyframes field-spin { to { transform: rotate(360deg); } }
 
 @keyframes project-fade-in {
   from {
@@ -1790,11 +1815,6 @@ button:focus-visible {
     transform: rotate(90deg);
   }
 
-  .project-back-to-top:hover {
-    border-color: rgba(244, 242, 237, 0.34);
-    background: rgba(244, 242, 237, 0.13);
-    color: #ffffff;
-  }
 }
 
 @media (max-width: 760px), (pointer: coarse) {
