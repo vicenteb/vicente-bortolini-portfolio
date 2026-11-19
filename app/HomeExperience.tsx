@@ -886,28 +886,25 @@ export default function HomeExperience({
               Sobre Vicente Bortolini
             </h1>
             <p>
-              Sou especialista em Product Design, UX Strategy e transformação
-              digital, com sólida experiência na criação de produtos digitais
-              escaláveis para web, mobile, tablets e ecossistemas omnichannel.
-              Atuo conectando negócio, tecnologia e experiência do usuário para
-              desenvolver soluções digitais com impacto real em operação,
-              vendas, eficiência e experiência do cliente.
+              Sou Product Designer com sólida experiência em UX/UI, estratégia
+              de produto e transformação digital, criando e evoluindo produtos
+              para web, mobile, tablets e ecossistemas omnichannel. Meu trabalho
+              conecta necessidades dos usuários, objetivos de negócio e
+              tecnologia para transformar problemas complexos em experiências
+              simples, intuitivas e escaláveis.
             </p>
             <p>
-              Ao longo da minha trajetória, participei da concepção e evolução
-              de plataformas de jornalismo e mídia digital, e-commerce,
-              aplicativos, sistemas de PDV (POS), self-checkout, produtos
-              omnichannel, dashboards e soluções digitais internas para
-              operação e logística do varejo e instituições financeiras.
+              Ao longo da minha trajetória, atuei em diferentes contextos e
+              segmentos, participando da criação e evolução de plataformas de
+              mídia e jornalismo, e-commerce, aplicativos, sistemas de PDV
+              (POS), self-checkout, produtos financeiros, dashboards e soluções
+              digitais para operações de varejo e logística.
             </p>
-            <p className="about-expertise-title">Tenho atuação forte em:</p>
-            <p className="about-expertise">
-              Product Design | UX/UI Design | Product Strategy | Design Systems
-              | Discovery &amp; Delivery | Omnichannel Experience | Jornada do
-              Usuário | Transformação Digital | Inteligência Artificial
-              aplicada ao Design | Prototipação | Arquitetura de Informação |
-              Design Ops | Agile / Scrum | Figma | Experiência em varejo e
-              e-commerce | Fintech &amp; Financial
+            <p>
+              Tenho uma forte vivência em produtos transacionais e jornadas
+              omnichannel, trabalhando de ponta a ponta, do discovery e
+              definição de fluxos à prototipação, validação, interface e
+              evolução contínua do produto.
             </p>
             <div className="about-drawer-links">
               <button
