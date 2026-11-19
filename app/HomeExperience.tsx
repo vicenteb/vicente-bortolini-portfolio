@@ -906,6 +906,23 @@ export default function HomeExperience({
               definição de fluxos à prototipação, validação, interface e
               evolução contínua do produto.
             </p>
+            <section className="about-skills" aria-label="Competências">
+              <h2>Hard Skills</h2>
+              <p>
+                Product Design | UX/UI Design | Product Strategy | UX Research |
+                Design Systems | Service Design | Omnichannel | Prototipação |
+                Design Ops | Handoff | IA aplicada ao Design | Figma | Produtos
+                Digitais Escaláveis | Varejo &amp; E-commerce | Fintech | SaaS |
+                ERP
+              </p>
+              <h2>Soft Skills</h2>
+              <p>
+                Pensamento Estratégico | Resolução de Problemas | Visão Sistêmica
+                | Colaboração | Comunicação | Autonomia | Pensamento Analítico |
+                Adaptabilidade | Facilitação | Tomada de Decisão | Curiosidade |
+                Proatividade
+              </p>
+            </section>
             <div className="about-drawer-links">
               <button
                 ref={awardsTriggerRef}
