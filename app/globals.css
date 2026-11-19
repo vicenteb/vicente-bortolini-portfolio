@@ -2507,6 +2507,16 @@ button:focus-visible {
     padding: 0;
     background: transparent;
   }
+
+  .about-screen .awards-overlay:not(.studies-overlay) .awards-drawer {
+    height: calc(100svh - clamp(7.4rem, 13vh, 9.5rem) - 5.5rem);
+  }
+
+  .about-screen .awards-overlay:not(.studies-overlay) .awards-list {
+    padding-bottom: 3.5rem;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3.5rem), transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 3.5rem), transparent 100%);
+  }
 }
 
 @media (max-height: 600px) and (orientation: landscape) {
