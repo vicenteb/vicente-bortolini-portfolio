@@ -105,6 +105,10 @@ a[x-apple-data-detectors] {
     background: var(--background);
   }
 
+  .about-screen .studies-overlay {
+    padding-inline: 1.5rem;
+  }
+
   .about-screen .awards-drawer,
   .about-screen .studies-drawer {
     padding-inline: 1.5rem;
@@ -122,6 +126,12 @@ a[x-apple-data-detectors] {
   .about-screen .awards-list,
   .about-screen .studies-list {
     padding-right: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .about-screen .studies-overlay {
+    padding-inline: 0.5rem;
   }
 }
 

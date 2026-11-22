@@ -342,9 +342,9 @@ const awards = [
 ];
 
 const education = [
-  { date: "2012 - 2013", institution: "ESPM", course: "Pós-graduação / Especialização - Marketing Digital", image: "/education-espm.jpg" },
-  { date: "2006 - 2006", institution: "UNISINOS", course: "Ensino Técnico - Produção Gráfica", image: "/education-unisinos.jpg" },
-  { date: "2001 - 2004", institution: "PUCRS", course: "Bacharelado - Publicidade e Propaganda", image: "/education-pucrs.jpg" },
+  { date: "2012 - 2013", institution: "ESPM", formationType: "PÓS-GRADUAÇÃO", course: "Marketing Digital", image: "/education-espm.jpg" },
+  { date: "2006 - 2006", institution: "UNISINOS", formationType: "CURSO TÉCNICO", course: "Produção Gráfica", image: "/education-unisinos.jpg" },
+  { date: "2001 - 2004", institution: "PUCRS", formationType: "BACHARELADO", course: "Publicidade e Propaganda", image: "/education-pucrs.jpg" },
 ];
 
 export default function HomeExperience({
@@ -1336,7 +1336,7 @@ export default function HomeExperience({
                   />
                   <div className="study-copy">
                     <time>{item.date}</time>
-                    <p className="study-institution">{item.institution}</p>
+                    <p className="study-institution">{item.institution} - {item.formationType}</p>
                     <h3>{item.course}</h3>
                   </div>
                 </article>

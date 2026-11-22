@@ -1435,6 +1435,7 @@ a {
   font-size: clamp(0.72rem, 0.8vw, 0.82rem);
   font-weight: 400;
   letter-spacing: 0.075em;
+  white-space: nowrap;
 }
 
 .study-copy h3 {
