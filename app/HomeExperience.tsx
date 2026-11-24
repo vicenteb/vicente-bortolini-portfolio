@@ -919,7 +919,7 @@ export default function HomeExperience({
               <p>
                 Pensamento Estratégico | Resolução de Problemas | Visão Sistêmica
                 | Colaboração | Comunicação | Autonomia | Pensamento Analítico |
-                Adaptabilidade | Facilitação | Tomada de Decisão | Curiosidade |
+                Adaptabilidade | Facilitação | Tomada de Decisão |
                 Proatividade
               </p>
             </section>
